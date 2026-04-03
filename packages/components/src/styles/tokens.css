@@ -1,0 +1,58 @@
+/* ─── Design Tokens ─────────────────────────────────────────────
+   Light-mode values live on :root.
+   Dark-mode values are activated by the `dark` class on <html>.
+   ────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Background */
+  --ui-bg: #ffffff;
+  --ui-bg-subtle: #f4f4f5;
+  --ui-bg-active: #e4e4e7;
+
+  /* Text */
+  --ui-text: #18181b;
+  --ui-text-subtle: #71717a;
+
+  /* Border */
+  --ui-border: #e4e4e7;
+
+  /* Ring (focus) */
+  --ui-ring: #3b82f6;
+
+  /* Primary button */
+  --ui-btn-primary-bg: #18181b;
+  --ui-btn-primary-bg-hover: #27272a;
+  --ui-btn-primary-text: #ffffff;
+
+  /* Sidebar */
+  --ui-sidebar-bg: #fafafa;
+  --ui-sidebar-border: #e4e4e7;
+  --ui-sidebar-text: #3f3f46;
+  --ui-sidebar-text-active: #18181b;
+  --ui-sidebar-item-hover: #f4f4f5;
+  --ui-sidebar-item-active: #e4e4e7;
+}
+
+.dark {
+  --ui-bg: #09090b;
+  --ui-bg-subtle: #18181b;
+  --ui-bg-active: #27272a;
+
+  --ui-text: #fafafa;
+  --ui-text-subtle: #a1a1aa;
+
+  --ui-border: #27272a;
+
+  --ui-ring: #60a5fa;
+
+  --ui-btn-primary-bg: #fafafa;
+  --ui-btn-primary-bg-hover: #e4e4e7;
+  --ui-btn-primary-text: #09090b;
+
+  --ui-sidebar-bg: #0a0a0c;
+  --ui-sidebar-border: #27272a;
+  --ui-sidebar-text: #a1a1aa;
+  --ui-sidebar-text-active: #fafafa;
+  --ui-sidebar-item-hover: #18181b;
+  --ui-sidebar-item-active: #27272a;
+}
