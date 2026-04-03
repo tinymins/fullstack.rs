@@ -23,7 +23,7 @@ export default function DashboardIndexRoute() {
       <div className="mx-auto w-full max-w-3xl px-6 py-12">
         <div className="card">
           <h2 className="text-xl font-semibold">{t("workspace.empty")}</h2>
-          <p className="mt-2 text-[var(--ui-text-muted)]">
+          <p className="mt-2 text-[var(--text-muted)]">
             {t("workspace.createFirst")}
           </p>
         </div>

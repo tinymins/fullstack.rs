@@ -12,12 +12,12 @@ function WorkspaceNotFound({ slug }: { slug: string }) {
   const { t } = useTranslation();
   return (
     <div className="flex h-full items-center justify-center p-8">
-      <div className="rounded-lg border bg-[var(--ui-bg)] border-[var(--ui-border)] p-8 text-center space-y-3 max-w-md w-full">
-        <h2 className="text-2xl font-semibold text-[var(--ui-text)]">
+      <div className="glass glass-accent p-8 text-center space-y-3 max-w-md w-full">
+        <h2 className="text-2xl font-semibold text-[var(--text-primary)]">
           {t("errors.workspace.notFound")}
         </h2>
-        <p className="text-[var(--ui-text-muted)]">
-          <code className="text-[var(--ui-focus)]">/{slug}</code>{" "}
+        <p className="text-[var(--text-secondary)]">
+          <code className="text-[var(--accent-text)]">/{slug}</code>{" "}
           {t("errors.workspace.notFoundDesc")}
         </p>
       </div>
@@ -36,7 +36,6 @@ export default function DashboardLayout() {
     return <WorkspaceRedirectSkeleton />;
   }
 
-  // list already filters by membership — not found means no access
   const currentWorkspace = currentSlug
     ? (workspaces.find((ws) => ws.slug === currentSlug) ?? null)
     : null;
@@ -44,11 +43,13 @@ export default function DashboardLayout() {
   const workspaceNotFound = currentSlug && currentWorkspace === null;
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[var(--ui-bg)]">
+    <div className="flex h-screen overflow-hidden bg-[var(--bg-base)]">
+      <div className="aurora-bg" />
+
       {/* Sidebar */}
-      <aside className="w-60 shrink-0 flex flex-col border-r bg-[var(--ui-sidebar-bg)] border-[var(--ui-sidebar-border)]">
+      <aside className="glass-sidebar w-60 shrink-0 flex flex-col z-10">
         {/* Workspace switcher — top */}
-        <div className="border-b border-[var(--ui-sidebar-border)]">
+        <div className="border-b border-[var(--border-base)]">
           <WorkspaceSwitcher
             workspaces={workspaces}
             currentSlug={currentSlug}
@@ -63,14 +64,14 @@ export default function DashboardLayout() {
 
         {/* User menu — bottom */}
         {user && (
-          <div className="border-t border-[var(--ui-sidebar-border)]">
+          <div className="border-t border-[var(--border-base)]">
             <UserMenu user={user} onUpdateUser={updateUser} onLogout={logout} />
           </div>
         )}
       </aside>
 
       {/* Scrollable main content */}
-      <main className="flex-1 overflow-y-auto bg-[var(--ui-bg-subtle)]">
+      <main className="flex-1 overflow-y-auto z-10">
         {workspaceNotFound ? (
           <WorkspaceNotFound slug={currentSlug} />
         ) : (

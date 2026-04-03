@@ -61,10 +61,11 @@ export default function AuthPage({ initialMode = "login" }: LoginPageProps) {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center px-4 bg-[var(--ui-bg-subtle)]">
-      <div className="w-full max-w-sm">
-        <div className="rounded-lg border p-8 bg-[var(--ui-bg)] border-[var(--ui-border)]">
-          <h1 className="text-xl font-semibold mb-6 text-[var(--ui-text)]">
+    <div className="fixed inset-0 flex items-center justify-center px-4 bg-[var(--bg-base)]">
+      <div className="aurora-bg" />
+      <div className="w-full max-w-sm z-10">
+        <div className="glass glass-accent p-8">
+          <h1 className="text-xl font-semibold mb-6 text-[var(--text-primary)]">
             {mode === "login" ? t("auth.login") : t("auth.register")}
           </h1>
 
@@ -97,8 +98,8 @@ export default function AuthPage({ initialMode = "login" }: LoginPageProps) {
             {error && (
               <p
                 className="rounded-md border px-3 py-2 text-sm
-                  text-[var(--ui-danger-text)] bg-[var(--ui-danger-bg)]
-                  border-[var(--ui-danger-text)]"
+                  text-[var(--accent-text)] bg-[var(--accent-subtle)]
+                  border-[var(--accent-text)]"
               >
                 {error}
               </p>
@@ -111,7 +112,7 @@ export default function AuthPage({ initialMode = "login" }: LoginPageProps) {
             <button
               type="button"
               onClick={switchMode}
-              className="cursor-pointer w-full text-sm hover:underline text-[var(--ui-text-muted)]"
+              className="cursor-pointer w-full text-sm hover:underline text-[var(--text-muted)]"
             >
               {mode === "login"
                 ? t("auth.noAccountRegister")

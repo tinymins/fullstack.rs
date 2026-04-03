@@ -254,7 +254,7 @@ export default function SystemSettingsModal({
         width={isSuperAdmin ? 800 : 520}
       >
         {/* Tabs */}
-        <div className="border-b border-[var(--ui-border)] mb-4">
+        <div className="border-b border-[var(--border-base)] mb-4">
           <nav className="-mb-px flex gap-4">
             {tabs.map((tab) => (
               <button
@@ -264,7 +264,7 @@ export default function SystemSettingsModal({
                 className={`pb-3 text-sm font-medium border-b-2 transition-colors ${
                   activeTab === tab.key
                     ? "border-blue-500 text-blue-600 dark:text-blue-400"
-                    : "border-transparent text-[var(--ui-text-muted)] hover:text-[var(--ui-text)]"
+                    : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-primary)]"
                 }`}
               >
                 {tab.label}
@@ -278,10 +278,10 @@ export default function SystemSettingsModal({
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-[var(--ui-text)]">
+                <p className="text-sm font-medium text-[var(--text-primary)]">
                   {t("systemSettings.allowRegistration")}
                 </p>
-                <p className="text-xs text-[var(--ui-text-muted)] mt-1">
+                <p className="text-xs text-[var(--text-muted)] mt-1">
                   {t("systemSettings.allowRegistrationDesc")}
                 </p>
               </div>
@@ -295,10 +295,10 @@ export default function SystemSettingsModal({
               !settingsQuery.data?.singleWorkspaceModeOverridden && (
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-[var(--ui-text)]">
+                    <p className="text-sm font-medium text-[var(--text-primary)]">
                       {t("systemSettings.singleWorkspaceMode")}
                     </p>
-                    <p className="text-xs text-[var(--ui-text-muted)] mt-1">
+                    <p className="text-xs text-[var(--text-muted)] mt-1">
                       {t("systemSettings.singleWorkspaceModeDesc")}
                     </p>
                   </div>
@@ -323,20 +323,20 @@ export default function SystemSettingsModal({
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-[var(--ui-border)]">
-                    <th className="py-2 px-3 text-left font-medium text-[var(--ui-text-muted)]">
+                  <tr className="border-b border-[var(--border-base)]">
+                    <th className="py-2 px-3 text-left font-medium text-[var(--text-muted)]">
                       {t("systemSettings.userNameColumn")}
                     </th>
-                    <th className="py-2 px-3 text-left font-medium text-[var(--ui-text-muted)]">
+                    <th className="py-2 px-3 text-left font-medium text-[var(--text-muted)]">
                       {t("systemSettings.emailColumn")}
                     </th>
-                    <th className="py-2 px-3 text-left font-medium text-[var(--ui-text-muted)]">
+                    <th className="py-2 px-3 text-left font-medium text-[var(--text-muted)]">
                       {t("systemSettings.userRole")}
                     </th>
-                    <th className="py-2 px-3 text-left font-medium text-[var(--ui-text-muted)]">
+                    <th className="py-2 px-3 text-left font-medium text-[var(--text-muted)]">
                       {t("systemSettings.lastLoginAt")}
                     </th>
-                    <th className="py-2 px-3 text-left font-medium text-[var(--ui-text-muted)]">
+                    <th className="py-2 px-3 text-left font-medium text-[var(--text-muted)]">
                       {t("systemSettings.userActions")}
                     </th>
                   </tr>
@@ -348,16 +348,16 @@ export default function SystemSettingsModal({
                     return (
                       <tr
                         key={record.id}
-                        className="border-b border-[var(--ui-border)] last:border-0"
+                        className="border-b border-[var(--border-base)] last:border-0"
                       >
                         <td className="py-2 px-3">{record.name}</td>
-                        <td className="py-2 px-3 text-[var(--ui-text-muted)]">
+                        <td className="py-2 px-3 text-[var(--text-muted)]">
                           {record.email}
                         </td>
                         <td className="py-2 px-3">
                           <RoleBadge role={record.role} />
                         </td>
-                        <td className="py-2 px-3 text-xs text-[var(--ui-text-muted)]">
+                        <td className="py-2 px-3 text-xs text-[var(--text-muted)]">
                           {record.lastLoginAt
                             ? new Date(record.lastLoginAt).toLocaleString()
                             : t("systemSettings.neverLogin")}
@@ -435,7 +435,7 @@ export default function SystemSettingsModal({
                 </tbody>
               </table>
               {usersQuery.isLoading && (
-                <div className="py-8 text-center text-[var(--ui-text-muted)]">
+                <div className="py-8 text-center text-[var(--text-muted)]">
                   Loading...
                 </div>
               )}
@@ -455,11 +455,11 @@ export default function SystemSettingsModal({
                   onChange={(e) => setInvitationExpiresHours(e.target.value)}
                   className="w-32"
                 />
-                <span className="text-sm text-[var(--ui-text-muted)]">
+                <span className="text-sm text-[var(--text-muted)]">
                   {t("systemSettings.hoursUnit")}
                 </span>
               </div>
-              <span className="text-xs text-[var(--ui-text-subtle)]">
+              <span className="text-xs text-[var(--text-muted)]">
                 {invitationExpiresHours ? "" : t("systemSettings.noExpiration")}
               </span>
               <Button
@@ -473,20 +473,20 @@ export default function SystemSettingsModal({
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-[var(--ui-border)]">
-                    <th className="py-2 px-3 text-left font-medium text-[var(--ui-text-muted)]">
+                  <tr className="border-b border-[var(--border-base)]">
+                    <th className="py-2 px-3 text-left font-medium text-[var(--text-muted)]">
                       {t("systemSettings.invitationCode")}
                     </th>
-                    <th className="py-2 px-3 text-left font-medium text-[var(--ui-text-muted)]">
+                    <th className="py-2 px-3 text-left font-medium text-[var(--text-muted)]">
                       {t("systemSettings.invitationStatus")}
                     </th>
-                    <th className="py-2 px-3 text-left font-medium text-[var(--ui-text-muted)]">
+                    <th className="py-2 px-3 text-left font-medium text-[var(--text-muted)]">
                       {t("systemSettings.invitationExpiresAt")}
                     </th>
-                    <th className="py-2 px-3 text-left font-medium text-[var(--ui-text-muted)]">
+                    <th className="py-2 px-3 text-left font-medium text-[var(--text-muted)]">
                       {t("systemSettings.invitationCreatedAt")}
                     </th>
-                    <th className="py-2 px-3 text-left font-medium text-[var(--ui-text-muted)]">
+                    <th className="py-2 px-3 text-left font-medium text-[var(--text-muted)]">
                       {t("systemSettings.userActions")}
                     </th>
                   </tr>
@@ -498,7 +498,7 @@ export default function SystemSettingsModal({
                       return (
                         <tr
                           key={record.id}
-                          className="border-b border-[var(--ui-border)] last:border-0"
+                          className="border-b border-[var(--border-base)] last:border-0"
                         >
                           <td className="py-2 px-3">
                             <code
@@ -511,12 +511,12 @@ export default function SystemSettingsModal({
                           <td className="py-2 px-3">
                             <InvitationStatusBadge invitation={record} />
                           </td>
-                          <td className="py-2 px-3 text-xs text-[var(--ui-text-muted)]">
+                          <td className="py-2 px-3 text-xs text-[var(--text-muted)]">
                             {record.expiresAt
                               ? new Date(record.expiresAt).toLocaleString()
                               : t("systemSettings.invitationNeverExpire")}
                           </td>
-                          <td className="py-2 px-3 text-xs text-[var(--ui-text-muted)]">
+                          <td className="py-2 px-3 text-xs text-[var(--text-muted)]">
                             {new Date(record.createdAt).toLocaleString()}
                           </td>
                           <td className="py-2 px-3">
@@ -572,7 +572,7 @@ export default function SystemSettingsModal({
                 </tbody>
               </table>
               {invitationsQuery.isLoading && (
-                <div className="py-8 text-center text-[var(--ui-text-muted)]">
+                <div className="py-8 text-center text-[var(--text-muted)]">
                   Loading...
                 </div>
               )}
@@ -590,14 +590,14 @@ export default function SystemSettingsModal({
         }}
         title={t("systemSettings.resetPasswordTitle")}
       >
-        <p className="mb-4 text-sm text-[var(--ui-text-muted)]">
+        <p className="mb-4 text-sm text-[var(--text-muted)]">
           {t("systemSettings.resetPasswordDesc", {
             name: resetPasswordModal.userName,
           })}
         </p>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-[var(--ui-text)] mb-1">
+            <label className="block text-sm font-medium text-[var(--text-primary)] mb-1">
               {t("systemSettings.newPassword")}
             </label>
             <Input
@@ -640,12 +640,12 @@ export default function SystemSettingsModal({
         }}
         title={t("systemSettings.addUserTitle")}
       >
-        <p className="mb-4 text-sm text-[var(--ui-text-muted)]">
+        <p className="mb-4 text-sm text-[var(--text-muted)]">
           {t("systemSettings.addUserDesc")}
         </p>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-[var(--ui-text)] mb-1">
+            <label className="block text-sm font-medium text-[var(--text-primary)] mb-1">
               {t("systemSettings.userName")}
             </label>
             <Input
@@ -657,7 +657,7 @@ export default function SystemSettingsModal({
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-[var(--ui-text)] mb-1">
+            <label className="block text-sm font-medium text-[var(--text-primary)] mb-1">
               {t("systemSettings.userEmail")}
             </label>
             <Input
@@ -670,7 +670,7 @@ export default function SystemSettingsModal({
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-[var(--ui-text)] mb-1">
+            <label className="block text-sm font-medium text-[var(--text-primary)] mb-1">
               {t("systemSettings.userPassword")}
             </label>
             <Input
@@ -683,7 +683,7 @@ export default function SystemSettingsModal({
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-[var(--ui-text)] mb-1">
+            <label className="block text-sm font-medium text-[var(--text-primary)] mb-1">
               {t("systemSettings.userRoleSelect")}
             </label>
             <Select

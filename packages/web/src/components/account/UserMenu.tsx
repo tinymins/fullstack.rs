@@ -34,10 +34,10 @@ export default function UserMenu({
       type: "label",
       label: (
         <div className="px-3 py-2">
-          <p className="text-sm font-medium text-[var(--ui-text)] truncate">
+          <p className="text-sm font-medium text-[var(--text-primary)] truncate">
             {displayName}
           </p>
-          <p className="text-xs text-[var(--ui-text-muted)] truncate">
+          <p className="text-xs text-[var(--text-muted)] truncate">
             {user.email}
           </p>
         </div>
@@ -98,7 +98,7 @@ export default function UserMenu({
       >
         <button
           type="button"
-          className="cursor-pointer w-full flex items-center gap-2 rounded px-2 py-1.5 text-sm text-[var(--ui-text)] hover:bg-[var(--ui-sidebar-item-hover)] transition-colors"
+          className="cursor-pointer w-full flex items-center gap-2 rounded px-2 py-1.5 text-sm text-[var(--text-primary)] hover:bg-[var(--bg-glass-hover)] transition-colors"
         >
           <Avatar
             src={resolveAvatarUrl(user.settings?.avatarKey)}

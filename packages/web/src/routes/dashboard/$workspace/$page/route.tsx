@@ -7,9 +7,11 @@ export default function DemoPageRoute() {
 
   return (
     <div className="flex h-full items-center justify-center p-8">
-      <p className="text-2xl font-medium text-[var(--ui-text-muted)]">
+      <p className="text-2xl font-medium text-[var(--text-muted)]">
         已切换到&nbsp;
-        <span className="text-[var(--ui-text)] font-semibold">{pageName}</span>
+        <span className="text-[var(--text-primary)] font-semibold">
+          {pageName}
+        </span>
       </p>
     </div>
   );

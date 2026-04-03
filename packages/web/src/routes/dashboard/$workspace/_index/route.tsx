@@ -8,23 +8,34 @@ export default function WorkspaceRoute() {
 
   return (
     <div className="p-8">
-      <div className="rounded-lg border bg-[var(--ui-bg)] border-[var(--ui-border)] p-8 text-center space-y-3">
-        <h2 className="text-2xl font-semibold text-[var(--ui-text)]">
-          {t("workspace.placeholder")}
-        </h2>
-        <p className="text-[var(--ui-text-muted)]">
-          {t("workspace.currentWorkspace")}
-          <code className="text-[var(--ui-focus)]">{workspace.name}</code>
-          <span className="ml-2 text-xs text-[var(--ui-text-subtle)]">
-            /{workspace.slug}
-          </span>
-        </p>
-        {user && (
-          <p className="text-sm text-[var(--ui-text-subtle)]">
-            {t("workspace.userLabel")}
-            {user.name || user.email}
+      <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-2">
+        {t("workspace.welcomeBack", { name: user?.name || user?.email || "" })}
+      </h1>
+      <p className="text-[var(--text-secondary)] mb-8">{workspace.name}</p>
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="glass glass-accent p-5">
+          <p className="text-xs text-[var(--text-muted)] mb-1">
+            {t("workspace.placeholder")}
           </p>
-        )}
+          <p className="text-2xl font-bold text-[var(--text-primary)]">—</p>
+        </div>
+        <div className="glass glass-accent p-5">
+          <p className="text-xs text-[var(--text-muted)] mb-1">
+            {t("workspace.userLabel")}
+          </p>
+          <p className="text-2xl font-bold text-[var(--text-primary)]">
+            {user?.name || "—"}
+          </p>
+        </div>
+        <div className="glass glass-accent p-5">
+          <p className="text-xs text-[var(--text-muted)] mb-1">
+            {t("workspace.currentWorkspace")}
+          </p>
+          <p className="text-lg font-semibold text-[var(--accent-text)]">
+            /{workspace.slug}
+          </p>
+        </div>
       </div>
     </div>
   );

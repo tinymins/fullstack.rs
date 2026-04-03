@@ -117,7 +117,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--ui-bg)] text-[var(--ui-text)]">
+    <div className="min-h-screen bg-[var(--bg-elevated)] text-[var(--text-primary)]">
       {/* Header */}
       <motion.header
         initial={{ y: -80, opacity: 0 }}

@@ -35,17 +35,15 @@ export default function ErrorPage({
   const primaryLabel = t("common.backToHome");
   const iconPath = ICON_PATH[variant];
   const isPrimary = variant === "primary";
-  const glowBg = isPrimary ? "var(--ui-bg-active)" : "var(--ui-btn-danger-bg)";
+  const glowBg = isPrimary ? "var(--accent-subtle)" : "var(--accent)";
   const glowOpacity = isPrimary ? "opacity-40" : "opacity-10";
-  const iconBg = isPrimary
-    ? "bg-[var(--ui-btn-primary-bg)]"
-    : "bg-[var(--ui-btn-danger-bg)]";
+  const iconBg = isPrimary ? "bg-[var(--accent)]" : "bg-[var(--accent)]";
   const primaryBtnClass = isPrimary
-    ? "bg-[var(--ui-btn-primary-bg)] hover:bg-[var(--ui-btn-primary-bg-hover)] text-[var(--ui-btn-primary-text)]"
-    : "bg-[var(--ui-btn-danger-bg)] hover:bg-[var(--ui-btn-danger-bg-hover)] text-[var(--ui-btn-danger-text)]";
+    ? "bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[white]"
+    : "bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[white]";
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[var(--ui-bg-subtle)] px-4 text-[var(--ui-text)]">
+    <div className="flex min-h-screen items-center justify-center bg-[var(--bg-base)] px-4 text-[var(--text-primary)]">
       <div className="relative max-w-lg text-center">
         <div
           className={`absolute -top-20 -left-20 h-40 w-40 rounded-full blur-3xl ${glowOpacity}`}
@@ -59,7 +57,7 @@ export default function ErrorPage({
         <div className="relative">
           <div className="mb-8 flex items-center justify-center">
             <div className="relative">
-              <span className="text-[180px] font-black leading-none text-[var(--ui-bg-element)] select-none">
+              <span className="text-[180px] font-black leading-none text-[var(--bg-elevated)] select-none">
                 {code}
               </span>
               <div className="absolute inset-0 flex items-center justify-center">
@@ -85,8 +83,10 @@ export default function ErrorPage({
             </div>
           </div>
 
-          <h1 className="text-2xl font-bold text-[var(--ui-text)]">{title}</h1>
-          <p className="mt-3 text-[var(--ui-text-muted)]">{description}</p>
+          <h1 className="text-2xl font-bold text-[var(--text-primary)]">
+            {title}
+          </h1>
+          <p className="mt-3 text-[var(--text-muted)]">{description}</p>
 
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <Link
@@ -112,7 +112,7 @@ export default function ErrorPage({
             {secondaryTo ? (
               <Link
                 to={secondaryTo}
-                className="cursor-pointer inline-flex items-center gap-2 rounded-md border bg-[var(--ui-btn-secondary-bg)] hover:bg-[var(--ui-btn-secondary-bg-hover)] border-[var(--ui-btn-secondary-border)] px-5 py-2.5 font-medium text-[var(--ui-btn-secondary-text)] transition-colors"
+                className="cursor-pointer inline-flex items-center gap-2 rounded-md border bg-[var(--bg-glass)] hover:bg-[var(--bg-glass-hover)] border-[var(--glass-border)] px-5 py-2.5 font-medium text-[var(--text-primary)] transition-colors"
               >
                 <svg
                   aria-hidden="true"
@@ -134,7 +134,7 @@ export default function ErrorPage({
               <button
                 type="button"
                 onClick={() => window.history.back()}
-                className="cursor-pointer inline-flex items-center gap-2 rounded-md border bg-[var(--ui-btn-secondary-bg)] hover:bg-[var(--ui-btn-secondary-bg-hover)] border-[var(--ui-btn-secondary-border)] px-5 py-2.5 font-medium text-[var(--ui-btn-secondary-text)] transition-colors"
+                className="cursor-pointer inline-flex items-center gap-2 rounded-md border bg-[var(--bg-glass)] hover:bg-[var(--bg-glass-hover)] border-[var(--glass-border)] px-5 py-2.5 font-medium text-[var(--text-primary)] transition-colors"
               >
                 <svg
                   aria-hidden="true"

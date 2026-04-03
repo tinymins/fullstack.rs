@@ -27,7 +27,7 @@ export default function WorkspaceSwitcher({
             key: "header",
             type: "label" as const,
             label: (
-              <div className="px-2 py-1.5 text-xs font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">
+              <div className="px-2 py-1.5 text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
                 {t("workspace.workspaces")}
               </div>
             ),
@@ -39,7 +39,7 @@ export default function WorkspaceSwitcher({
                 <WsIcon name={ws.name} size="sm" />
                 <span className="truncate">{ws.name}</span>
                 {ws.slug === currentSlug && (
-                  <span className="ml-auto text-xs text-[var(--ui-text-muted)]">
+                  <span className="ml-auto text-xs text-[var(--text-muted)]">
                     ✓
                   </span>
                 )}
@@ -57,7 +57,7 @@ export default function WorkspaceSwitcher({
       key: "create",
       label: (
         <span className="flex items-center gap-2.5">
-          <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded border border-dashed border-[var(--ui-border)] text-xs text-[var(--ui-text-muted)]">
+          <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded border border-dashed border-[var(--border-base)] text-xs text-[var(--text-muted)]">
             +
           </span>
           <span>{t("workspace.new")}</span>
@@ -80,13 +80,13 @@ export default function WorkspaceSwitcher({
     >
       <button
         type="button"
-        className="cursor-pointer w-full flex items-center gap-2 rounded px-2 py-1.5 text-sm font-medium text-[var(--ui-text)] hover:bg-[var(--ui-sidebar-item-hover)] transition-colors"
+        className="cursor-pointer w-full flex items-center gap-2 rounded px-2 py-1.5 text-sm font-medium text-[var(--text-primary)] hover:bg-[var(--bg-glass-hover)] transition-colors"
       >
         <WsIcon name={current?.name ?? "?"} size="md" />
         <span className="flex-1 text-left truncate">
           {current ? current.name : t("workspace.select")}
         </span>
-        <ChevronDown className="h-3.5 w-3.5 text-[var(--ui-text-muted)] shrink-0" />
+        <ChevronDown className="h-3.5 w-3.5 text-[var(--text-muted)] shrink-0" />
       </button>
     </Dropdown>
   );
@@ -97,7 +97,7 @@ function WsIcon({ name, size }: { name: string; size: "sm" | "md" }) {
   const dim = size === "md" ? "h-6 w-6" : "h-5 w-5";
   return (
     <span
-      className={`inline-flex ${dim} shrink-0 items-center justify-center rounded-md bg-[var(--ui-bg-element)] text-xs font-bold uppercase text-[var(--ui-text-muted)] border border-[var(--ui-border)]`}
+      className={`inline-flex ${dim} shrink-0 items-center justify-center rounded-md bg-[var(--bg-elevated)] text-xs font-bold uppercase text-[var(--text-muted)] border border-[var(--border-base)]`}
     >
       {letter}
     </span>
