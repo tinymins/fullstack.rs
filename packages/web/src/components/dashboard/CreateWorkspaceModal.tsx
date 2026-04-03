@@ -61,36 +61,48 @@ export default function CreateWorkspaceModal({
   };
 
   return (
-    <Modal open={open} onClose={onClose} title={t("workspace.new")}>
+    <Modal open={open} onCancel={onClose} title={t("workspace.new")}>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <Input
-          label={t("workspace.name")}
-          value={name}
-          onChange={(e) => handleNameChange(e.target.value)}
-          required
-          placeholder={t("workspace.namePlaceholder")}
-        />
-        <Input
-          label={t("workspace.slugLabel")}
-          value={slug}
-          onChange={(e) => {
-            setSlug(e.target.value);
-            setSlugEdited(true);
-          }}
-          placeholder={t("workspace.slugPlaceholder")}
-        />
-        <Input
-          label={t("workspace.description")}
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
+        <div>
+          <label className="block text-sm font-medium text-[var(--text-primary)] mb-1">
+            {t("workspace.name")}
+          </label>
+          <Input
+            value={name}
+            onChange={(e) => handleNameChange(e.target.value)}
+            required
+            placeholder={t("workspace.namePlaceholder")}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-[var(--text-primary)] mb-1">
+            {t("workspace.slugLabel")}
+          </label>
+          <Input
+            value={slug}
+            onChange={(e) => {
+              setSlug(e.target.value);
+              setSlugEdited(true);
+            }}
+            placeholder={t("workspace.slugPlaceholder")}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-[var(--text-primary)] mb-1">
+            {t("workspace.description")}
+          </label>
+          <Input
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </div>
         <div className="flex gap-3 pt-2">
-          <Button variant="secondary" fullWidth type="button" onClick={onClose}>
+          <Button variant="default" block type="button" onClick={onClose}>
             {t("common.cancel")}
           </Button>
           <Button
             variant="primary"
-            fullWidth
+            block
             type="submit"
             loading={createMutation.isPending}
           >

@@ -175,7 +175,6 @@ export default function LandingPage() {
                     onUpdateUser={updateUser}
                     onLogout={logout}
                     showDashboardLink
-                    glassy
                   />
                 </>
               ) : (

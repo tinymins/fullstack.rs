@@ -249,9 +249,9 @@ export default function SystemSettingsModal({
     <>
       <Modal
         open={open}
-        onClose={onClose}
+        onCancel={onClose}
         title={t("systemSettings.title")}
-        size={isSuperAdmin ? "xl" : "md"}
+        width={isSuperAdmin ? 800 : 520}
       >
         {/* Tabs */}
         <div className="border-b border-[var(--ui-border)] mb-4">
@@ -316,7 +316,7 @@ export default function SystemSettingsModal({
         {activeTab === "users" && isSuperAdmin && (
           <div className="space-y-4">
             <div className="flex justify-end">
-              <Button size="sm" onClick={() => setAddUserModal(true)}>
+              <Button size="small" onClick={() => setAddUserModal(true)}>
                 + {t("systemSettings.addUser")}
               </Button>
             </div>
@@ -387,8 +387,8 @@ export default function SystemSettingsModal({
                               className="w-28"
                             />
                             <Button
-                              size="sm"
-                              variant="ghost"
+                              size="small"
+                              variant="text"
                               disabled={isCurrentUser}
                               onClick={() =>
                                 setResetPasswordModal({
@@ -403,15 +403,15 @@ export default function SystemSettingsModal({
                             {confirmDeleteUser === record.id ? (
                               <div className="flex items-center gap-1">
                                 <Button
-                                  size="sm"
+                                  size="small"
                                   variant="danger"
                                   onClick={() => handleDeleteUser(record.id)}
                                 >
                                   {t("common.confirm")}
                                 </Button>
                                 <Button
-                                  size="sm"
-                                  variant="ghost"
+                                  size="small"
+                                  variant="text"
                                   onClick={() => setConfirmDeleteUser(null)}
                                 >
                                   {t("common.cancel")}
@@ -419,7 +419,7 @@ export default function SystemSettingsModal({
                               </div>
                             ) : (
                               <Button
-                                size="sm"
+                                size="small"
                                 variant="danger"
                                 disabled={isCurrentUser || isSuperAdminUser}
                                 onClick={() => setConfirmDeleteUser(record.id)}
@@ -463,7 +463,7 @@ export default function SystemSettingsModal({
                 {invitationExpiresHours ? "" : t("systemSettings.noExpiration")}
               </span>
               <Button
-                size="sm"
+                size="small"
                 onClick={handleGenerateInvitation}
                 disabled={generateInvitationMutation.isPending}
               >
@@ -522,8 +522,8 @@ export default function SystemSettingsModal({
                           <td className="py-2 px-3">
                             <div className="flex items-center gap-2">
                               <Button
-                                size="sm"
-                                variant="ghost"
+                                size="small"
+                                variant="text"
                                 disabled={isUsed}
                                 onClick={() =>
                                   handleCopyInvitationLink(record.code)
@@ -534,7 +534,7 @@ export default function SystemSettingsModal({
                               {confirmDeleteInvitation === record.id ? (
                                 <div className="flex items-center gap-1">
                                   <Button
-                                    size="sm"
+                                    size="small"
                                     variant="danger"
                                     onClick={() =>
                                       handleDeleteInvitation(record.id)
@@ -543,8 +543,8 @@ export default function SystemSettingsModal({
                                     {t("common.confirm")}
                                   </Button>
                                   <Button
-                                    size="sm"
-                                    variant="ghost"
+                                    size="small"
+                                    variant="text"
                                     onClick={() =>
                                       setConfirmDeleteInvitation(null)
                                     }
@@ -554,7 +554,7 @@ export default function SystemSettingsModal({
                                 </div>
                               ) : (
                                 <Button
-                                  size="sm"
+                                  size="small"
                                   variant="danger"
                                   onClick={() =>
                                     setConfirmDeleteInvitation(record.id)
@@ -584,7 +584,7 @@ export default function SystemSettingsModal({
       {/* Reset Password Modal */}
       <Modal
         open={resetPasswordModal.open}
-        onClose={() => {
+        onCancel={() => {
           setResetPasswordModal({ open: false, userId: "", userName: "" });
           setNewPassword("");
         }}
@@ -609,7 +609,7 @@ export default function SystemSettingsModal({
           </div>
           <div className="flex justify-end gap-2">
             <Button
-              variant="ghost"
+              variant="text"
               onClick={() => {
                 setResetPasswordModal({
                   open: false,
@@ -634,7 +634,7 @@ export default function SystemSettingsModal({
       {/* Add User Modal */}
       <Modal
         open={addUserModal}
-        onClose={() => {
+        onCancel={() => {
           setAddUserModal(false);
           setAddUserForm({ name: "", email: "", password: "", role: "user" });
         }}
@@ -703,7 +703,7 @@ export default function SystemSettingsModal({
           </div>
           <div className="flex justify-end gap-2">
             <Button
-              variant="ghost"
+              variant="text"
               onClick={() => {
                 setAddUserModal(false);
                 setAddUserForm({

@@ -1,9 +1,4 @@
-import {
-  Avatar,
-  Dropdown,
-  DropdownDivider,
-  DropdownItem,
-} from "@acme/components";
+import { Avatar, Dropdown, type DropdownMenuItem } from "@acme/components";
 import type { User } from "@acme/types";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -17,8 +12,6 @@ type UserMenuProps = {
   onUpdateUser: (user: User) => void;
   onLogout: () => void;
   showDashboardLink?: boolean;
-  /** Apply glassmorphism style to the dropdown panel (for landing page). */
-  glassy?: boolean;
 };
 
 export default function UserMenu({
@@ -26,7 +19,6 @@ export default function UserMenu({
   onUpdateUser,
   onLogout,
   showDashboardLink = false,
-  glassy = false,
 }: UserMenuProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -36,37 +28,12 @@ export default function UserMenu({
   const displayName = user.name || user.email;
   const isAdmin = user.role === "admin" || user.role === "superadmin";
 
-  const trigger = (
-    <button
-      type="button"
-      className="cursor-pointer w-full flex items-center gap-2 rounded px-2 py-1.5 text-sm text-[var(--ui-text)] hover:bg-[var(--ui-sidebar-item-hover)] transition-colors"
-    >
-      <Avatar
-        name={user.name}
-        email={user.email}
-        url={resolveAvatarUrl(user.settings?.avatarKey)}
-        size="sm"
-      />
-      <span className="flex-1 text-left truncate font-medium">
-        {displayName}
-      </span>
-    </button>
-  );
-
-  return (
-    <>
-      <Dropdown
-        open={open}
-        onOpenChange={setOpen}
-        trigger={trigger}
-        align="right"
-        panelClassName={
-          glassy
-            ? "!bg-white/60 dark:!bg-zinc-900/50 !border-white/25 dark:!border-white/10 backdrop-blur-2xl !shadow-2xl"
-            : ""
-        }
-      >
-        <div className="px-4 py-2">
+  const items: DropdownMenuItem[] = [
+    {
+      key: "header",
+      type: "label",
+      label: (
+        <div className="px-3 py-2">
           <p className="text-sm font-medium text-[var(--ui-text)] truncate">
             {displayName}
           </p>
@@ -74,44 +41,76 @@ export default function UserMenu({
             {user.email}
           </p>
         </div>
-        <DropdownDivider />
-        {showDashboardLink && (
-          <DropdownItem
-            onClick={() => {
+      ),
+    },
+    { type: "divider" },
+    ...(showDashboardLink
+      ? [
+          {
+            key: "dashboard",
+            label: t("landing.nav.dashboard"),
+            onClick: () => {
               setOpen(false);
               navigate("/dashboard");
-            }}
-          >
-            {t("landing.nav.dashboard")}
-          </DropdownItem>
-        )}
-        <DropdownItem
-          onClick={() => {
-            setOpen(false);
-            setSettingsOpen(true);
-          }}
-        >
-          {t("user.profileSettings")}
-        </DropdownItem>
-        {isAdmin && (
-          <DropdownItem
-            onClick={() => {
+            },
+          },
+        ]
+      : []),
+    {
+      key: "profile",
+      label: t("user.profileSettings"),
+      onClick: () => {
+        setOpen(false);
+        setSettingsOpen(true);
+      },
+    },
+    ...(isAdmin
+      ? [
+          {
+            key: "admin",
+            label: t("userMenu.admin"),
+            onClick: () => {
               setOpen(false);
               setSystemSettingsOpen(true);
-            }}
-          >
-            {t("userMenu.admin")}
-          </DropdownItem>
-        )}
-        <DropdownItem
-          danger
-          onClick={() => {
-            setOpen(false);
-            onLogout();
-          }}
+            },
+          },
+        ]
+      : []),
+    {
+      key: "logout",
+      label: t("user.signOut"),
+      danger: true,
+      onClick: () => {
+        setOpen(false);
+        onLogout();
+      },
+    },
+  ];
+
+  return (
+    <>
+      <Dropdown
+        open={open}
+        onOpenChange={setOpen}
+        trigger={["click"]}
+        placement="bottomRight"
+        menu={{ items }}
+      >
+        <button
+          type="button"
+          className="cursor-pointer w-full flex items-center gap-2 rounded px-2 py-1.5 text-sm text-[var(--ui-text)] hover:bg-[var(--ui-sidebar-item-hover)] transition-colors"
         >
-          {t("user.signOut")}
-        </DropdownItem>
+          <Avatar
+            src={resolveAvatarUrl(user.settings?.avatarKey)}
+            alt={user.name}
+            size="small"
+          >
+            {(user.name || "?").charAt(0).toUpperCase()}
+          </Avatar>
+          <span className="flex-1 text-left truncate font-medium">
+            {displayName}
+          </span>
+        </button>
       </Dropdown>
 
       <ProfileSettingsModal

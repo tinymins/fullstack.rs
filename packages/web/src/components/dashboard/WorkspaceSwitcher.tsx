@@ -1,4 +1,4 @@
-import { Dropdown, DropdownDivider, DropdownItem } from "@acme/components";
+import { Dropdown, type DropdownMenuItem } from "@acme/components";
 import type { Workspace } from "@acme/types";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -20,34 +20,21 @@ export default function WorkspaceSwitcher({
   const navigate = useNavigate();
   const current = workspaces.find((ws) => ws.slug === currentSlug);
 
-  const trigger = (
-    <button
-      type="button"
-      className="cursor-pointer w-full flex items-center gap-2 rounded px-2 py-1.5 text-sm font-medium text-[var(--ui-text)] hover:bg-[var(--ui-sidebar-item-hover)] transition-colors"
-    >
-      <WsIcon name={current?.name ?? "?"} size="md" />
-      <span className="flex-1 text-left truncate">
-        {current ? current.name : t("workspace.select")}
-      </span>
-      <ChevronDown className="h-3.5 w-3.5 text-[var(--ui-text-muted)] shrink-0" />
-    </button>
-  );
-
-  return (
-    <Dropdown open={open} onOpenChange={setOpen} trigger={trigger} align="left">
-      {workspaces.length > 0 && (
-        <>
-          <div className="px-3 py-1.5 text-xs font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">
-            {t("workspace.workspaces")}
-          </div>
-          {workspaces.map((ws) => (
-            <DropdownItem
-              key={ws.id}
-              onClick={() => {
-                setOpen(false);
-                navigate(`/dashboard/${ws.slug}`);
-              }}
-            >
+  const items: DropdownMenuItem[] = [
+    ...(workspaces.length > 0
+      ? [
+          {
+            key: "header",
+            type: "label" as const,
+            label: (
+              <div className="px-2 py-1.5 text-xs font-medium text-[var(--ui-text-muted)] uppercase tracking-wider">
+                {t("workspace.workspaces")}
+              </div>
+            ),
+          },
+          ...workspaces.map((ws) => ({
+            key: ws.id,
+            label: (
               <span className="flex items-center gap-2.5">
                 <WsIcon name={ws.name} size="sm" />
                 <span className="truncate">{ws.name}</span>
@@ -57,24 +44,50 @@ export default function WorkspaceSwitcher({
                   </span>
                 )}
               </span>
-            </DropdownItem>
-          ))}
-          <DropdownDivider />
-        </>
-      )}
-      <DropdownItem
-        onClick={() => {
-          setOpen(false);
-          onCreateNew();
-        }}
-      >
+            ),
+            onClick: () => {
+              setOpen(false);
+              navigate(`/dashboard/${ws.slug}`);
+            },
+          })),
+          { type: "divider" as const },
+        ]
+      : []),
+    {
+      key: "create",
+      label: (
         <span className="flex items-center gap-2.5">
           <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded border border-dashed border-[var(--ui-border)] text-xs text-[var(--ui-text-muted)]">
             +
           </span>
           <span>{t("workspace.new")}</span>
         </span>
-      </DropdownItem>
+      ),
+      onClick: () => {
+        setOpen(false);
+        onCreateNew();
+      },
+    },
+  ];
+
+  return (
+    <Dropdown
+      open={open}
+      onOpenChange={setOpen}
+      trigger={["click"]}
+      placement="bottomLeft"
+      menu={{ items }}
+    >
+      <button
+        type="button"
+        className="cursor-pointer w-full flex items-center gap-2 rounded px-2 py-1.5 text-sm font-medium text-[var(--ui-text)] hover:bg-[var(--ui-sidebar-item-hover)] transition-colors"
+      >
+        <WsIcon name={current?.name ?? "?"} size="md" />
+        <span className="flex-1 text-left truncate">
+          {current ? current.name : t("workspace.select")}
+        </span>
+        <ChevronDown className="h-3.5 w-3.5 text-[var(--ui-text-muted)] shrink-0" />
+      </button>
     </Dropdown>
   );
 }

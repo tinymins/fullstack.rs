@@ -63,16 +63,17 @@ export default function ProfileSettingsModal({
   };
 
   return (
-    <Modal open={open} onClose={onClose} title={t("user.profileSettings")}>
+    <Modal open={open} onCancel={onClose} title={t("user.profileSettings")}>
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Avatar upload */}
         <div className="flex items-center gap-4">
           <Avatar
-            name={name || user.name}
-            email={email || user.email}
-            url={avatar.avatarUrl || undefined}
-            size="lg"
-          />
+            src={avatar.avatarUrl || undefined}
+            alt={name || user.name}
+            size="large"
+          >
+            {(name || user.name || "?").charAt(0).toUpperCase()}
+          </Avatar>
           <div className="flex flex-col gap-2">
             <input
               ref={fileInputRef}
@@ -83,7 +84,7 @@ export default function ProfileSettingsModal({
             />
             <Button
               type="button"
-              variant="secondary"
+              variant="default"
               loading={avatar.uploading}
               onClick={() => fileInputRef.current?.click()}
             >
@@ -92,7 +93,7 @@ export default function ProfileSettingsModal({
             {avatar.avatarKey && (
               <Button
                 type="button"
-                variant="ghost"
+                variant="text"
                 loading={avatar.deleteMutation.isPending}
                 onClick={() => avatar.deleteMutation.mutate()}
               >
@@ -102,46 +103,61 @@ export default function ProfileSettingsModal({
           </div>
         </div>
 
-        <Input
-          label={t("user.name")}
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
+        <div>
+          <label className="block text-sm font-medium text-[var(--text-primary)] mb-1">
+            {t("user.name")}
+          </label>
+          <Input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        </div>
 
-        <Input
-          label={t("user.email")}
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+        <div>
+          <label className="block text-sm font-medium text-[var(--text-primary)] mb-1">
+            {t("user.email")}
+          </label>
+          <Input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
 
-        <Select
-          label={t("common.language")}
-          value={langMode}
-          onChange={(e) => setLangMode(e.target.value as "auto" | "zh" | "en")}
-        >
-          <option value="auto">{t("common.followSystem")}</option>
-          <option value="zh">{t("common.langZh")}</option>
-          <option value="en">{t("common.langEn")}</option>
-        </Select>
+        <div>
+          <label className="block text-sm font-medium text-[var(--text-primary)] mb-1">
+            {t("common.language")}
+          </label>
+          <Select
+            value={langMode}
+            onChange={(val) => setLangMode(val as "auto" | "zh" | "en")}
+            options={[
+              { value: "auto", label: t("common.followSystem") },
+              { value: "zh", label: t("common.langZh") },
+              { value: "en", label: t("common.langEn") },
+            ]}
+          />
+        </div>
 
-        <Select
-          label={t("common.theme")}
-          value={themeMode}
-          onChange={(e) =>
-            setThemeMode(e.target.value as "auto" | "light" | "dark")
-          }
-        >
-          <option value="auto">{t("common.followSystem")}</option>
-          <option value="light">{t("common.light")}</option>
-          <option value="dark">{t("common.dark")}</option>
-        </Select>
+        <div>
+          <label className="block text-sm font-medium text-[var(--text-primary)] mb-1">
+            {t("common.theme")}
+          </label>
+          <Select
+            value={themeMode}
+            onChange={(val) => setThemeMode(val as "auto" | "light" | "dark")}
+            options={[
+              { value: "auto", label: t("common.followSystem") },
+              { value: "light", label: t("common.light") },
+              { value: "dark", label: t("common.dark") },
+            ]}
+          />
+        </div>
 
         <div className="flex justify-end gap-2 pt-1">
-          <Button type="button" variant="ghost" onClick={onClose}>
+          <Button type="button" variant="text" onClick={onClose}>
             {t("common.cancel")}
           </Button>
           <Button

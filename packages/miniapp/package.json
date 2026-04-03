@@ -14,6 +14,7 @@
     "@tarojs/components": "4.1.11",
     "@tarojs/react": "4.1.11",
     "@tarojs/runtime": "4.1.11",
+    "@tarojs/shared": "4.1.11",
     "@tarojs/taro": "4.1.11",
     "@trpc/client": "^11.12.0",
     "@trpc/react-query": "^11.12.0",

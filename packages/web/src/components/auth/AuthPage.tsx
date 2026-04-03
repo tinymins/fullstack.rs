@@ -69,22 +69,30 @@ export default function AuthPage({ initialMode = "login" }: LoginPageProps) {
           </h1>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <Input
-              label={t("user.email")}
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="me@example.com"
-              required
-            />
-            <Input
-              label={t("auth.password")}
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              required
-            />
+            <div>
+              <label className="block text-sm font-medium text-[var(--text-primary)] mb-1">
+                {t("user.email")}
+              </label>
+              <Input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="me@example.com"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[var(--text-primary)] mb-1">
+                {t("auth.password")}
+              </label>
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+              />
+            </div>
 
             {error && (
               <p
@@ -96,12 +104,7 @@ export default function AuthPage({ initialMode = "login" }: LoginPageProps) {
               </p>
             )}
 
-            <Button
-              type="submit"
-              fullWidth
-              loading={isPending}
-              className="mt-1"
-            >
+            <Button type="submit" block loading={isPending} className="mt-1">
               {mode === "login" ? t("auth.login") : t("auth.register")}
             </Button>
 
