@@ -1,26 +1,10 @@
+import { Button, Input, Modal, Select } from "@acme/components";
 import type { AdminUser, InvitationCode, User, UserRole } from "@acme/types";
-import { CopyOutlined, LinkOutlined, PlusOutlined } from "@ant-design/icons";
 import { TRPCClientError } from "@trpc/client";
-import {
-  Button,
-  Form,
-  Input,
-  InputNumber,
-  Modal,
-  Popconfirm,
-  Select,
-  Space,
-  Switch,
-  Table,
-  Tabs,
-  Tag,
-  Tooltip,
-} from "antd";
-import type { ColumnsType } from "antd/es/table";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useMessage } from "../../hooks";
-import { trpc } from "../../lib/trpc";
+import { message } from "@/lib/message";
+import { trpc } from "@/lib/trpc";
 
 type SystemSettingsModalProps = {
   open: boolean;
@@ -28,22 +12,97 @@ type SystemSettingsModalProps = {
   user: User;
 };
 
+function RoleBadge({ role }: { role: UserRole }) {
+  const { t } = useTranslation();
+  const config: Record<UserRole, { bg: string; label: string }> = {
+    superadmin: {
+      bg: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
+      label: t("systemSettings.roleSuperAdmin"),
+    },
+    admin: {
+      bg: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
+      label: t("systemSettings.roleAdmin"),
+    },
+    user: {
+      bg: "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300",
+      label: t("systemSettings.roleUser"),
+    },
+  };
+  const c = config[role];
+  return (
+    <span
+      className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${c.bg}`}
+    >
+      {c.label}
+    </span>
+  );
+}
+
+function InvitationStatusBadge({ invitation }: { invitation: InvitationCode }) {
+  const { t } = useTranslation();
+  if (invitation.usedBy) {
+    return (
+      <span className="inline-flex items-center rounded-full bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 text-xs font-medium text-zinc-600 dark:text-zinc-400">
+        {t("systemSettings.invitationStatusUsed")}
+      </span>
+    );
+  }
+  if (invitation.expiresAt && new Date(invitation.expiresAt) < new Date()) {
+    return (
+      <span className="inline-flex items-center rounded-full bg-red-100 dark:bg-red-900/30 px-2 py-0.5 text-xs font-medium text-red-700 dark:text-red-400">
+        {t("systemSettings.invitationStatusExpired")}
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center rounded-full bg-green-100 dark:bg-green-900/30 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-400">
+      {t("systemSettings.invitationStatusUnused")}
+    </span>
+  );
+}
+
+function Toggle({
+  checked,
+  onChange,
+  disabled,
+}: {
+  checked: boolean;
+  onChange: (v: boolean) => void;
+  disabled?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      disabled={disabled}
+      onClick={() => onChange(!checked)}
+      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${
+        checked ? "bg-blue-600" : "bg-zinc-300 dark:bg-zinc-600"
+      }`}
+    >
+      <span
+        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+          checked ? "translate-x-5" : "translate-x-0"
+        }`}
+      />
+    </button>
+  );
+}
+
 export default function SystemSettingsModal({
   open,
   onClose,
   user,
 }: SystemSettingsModalProps) {
   const { t } = useTranslation();
-  const message = useMessage();
   const isSuperAdmin = user.role === "superadmin";
 
-  // 系统设置查询
   const settingsQuery = trpc.admin.getSystemSettings.useQuery(undefined, {
     enabled: open,
   });
   const updateSettingsMutation = trpc.admin.updateSystemSettings.useMutation();
 
-  // 用户列表查询（仅超管）
   const usersQuery = trpc.admin.listUsers.useQuery(undefined, {
     enabled: open && isSuperAdmin,
   });
@@ -53,7 +112,6 @@ export default function SystemSettingsModal({
   const deleteUserMutation = trpc.admin.deleteUser.useMutation();
   const createUserMutation = trpc.admin.createUser.useMutation();
 
-  // 邀请码查询（仅超管）
   const invitationsQuery = trpc.admin.listInvitationCodes.useQuery(undefined, {
     enabled: open && isSuperAdmin,
   });
@@ -62,7 +120,8 @@ export default function SystemSettingsModal({
   const deleteInvitationMutation =
     trpc.admin.deleteInvitationCode.useMutation();
 
-  // 重置密码模态框状态
+  const [activeTab, setActiveTab] = useState("general");
+
   const [resetPasswordModal, setResetPasswordModal] = useState<{
     open: boolean;
     userId: string;
@@ -70,7 +129,6 @@ export default function SystemSettingsModal({
   }>({ open: false, userId: "", userName: "" });
   const [newPassword, setNewPassword] = useState("");
 
-  // 添加用户模态框状态
   const [addUserModal, setAddUserModal] = useState(false);
   const [addUserForm, setAddUserForm] = useState({
     name: "",
@@ -79,9 +137,13 @@ export default function SystemSettingsModal({
     role: "user" as UserRole,
   });
 
-  // 邀请码有效期设置
-  const [invitationExpiresHours, setInvitationExpiresHours] = useState<
-    number | null
+  const [invitationExpiresHours, setInvitationExpiresHours] = useState("");
+
+  const [confirmDeleteUser, setConfirmDeleteUser] = useState<string | null>(
+    null,
+  );
+  const [confirmDeleteInvitation, setConfirmDeleteInvitation] = useState<
+    string | null
   >(null);
 
   const handleToggleRegistration = async (checked: boolean) => {
@@ -105,6 +167,7 @@ export default function SystemSettingsModal({
   const handleDeleteUser = async (userId: string) => {
     await deleteUserMutation.mutateAsync({ userId });
     usersQuery.refetch();
+    setConfirmDeleteUser(null);
     message.success(t("systemSettings.deleteSuccess"));
   };
 
@@ -146,13 +209,14 @@ export default function SystemSettingsModal({
     }
   };
 
-  // 邀请码处理函数
   const handleGenerateInvitation = async () => {
+    const hours = invitationExpiresHours
+      ? Number.parseInt(invitationExpiresHours, 10)
+      : undefined;
     const result = await generateInvitationMutation.mutateAsync({
-      expiresInHours: invitationExpiresHours ?? undefined,
+      expiresInHours: hours,
     });
     invitationsQuery.refetch();
-    // 自动复制到剪贴板
     const inviteUrl = `${window.location.origin}/login?invite=${result.code}`;
     await navigator.clipboard.writeText(inviteUrl);
     message.success(t("systemSettings.invitationGenerated"));
@@ -167,297 +231,16 @@ export default function SystemSettingsModal({
   const handleDeleteInvitation = async (codeId: string) => {
     await deleteInvitationMutation.mutateAsync({ codeId });
     invitationsQuery.refetch();
+    setConfirmDeleteInvitation(null);
     message.success(t("systemSettings.invitationDeleted"));
   };
 
-  const getInvitationStatus = (invitation: InvitationCode) => {
-    if (invitation.usedBy) {
-      return (
-        <Tag color="default">{t("systemSettings.invitationStatusUsed")}</Tag>
-      );
-    }
-    if (invitation.expiresAt && new Date(invitation.expiresAt) < new Date()) {
-      return (
-        <Tag color="red">{t("systemSettings.invitationStatusExpired")}</Tag>
-      );
-    }
-    return (
-      <Tag color="green">{t("systemSettings.invitationStatusUnused")}</Tag>
-    );
-  };
-
-  const getRoleTag = (role: UserRole) => {
-    const config: Record<UserRole, { color: string; label: string }> = {
-      superadmin: { color: "red", label: t("systemSettings.roleSuperAdmin") },
-      admin: { color: "blue", label: t("systemSettings.roleAdmin") },
-      user: { color: "default", label: t("systemSettings.roleUser") },
-    };
-    return <Tag color={config[role].color}>{config[role].label}</Tag>;
-  };
-
-  const columns: ColumnsType<AdminUser> = [
-    {
-      title: t("systemSettings.userNameColumn"),
-      dataIndex: "name",
-      key: "name",
-      width: 100,
-    },
-    {
-      title: t("systemSettings.emailColumn"),
-      dataIndex: "email",
-      key: "email",
-      width: 160,
-    },
-    {
-      title: t("systemSettings.userRole"),
-      dataIndex: "role",
-      key: "role",
-      width: 120,
-      render: (role: UserRole) => getRoleTag(role),
-    },
-    {
-      title: t("systemSettings.lastLoginAt"),
-      dataIndex: "lastLoginAt",
-      key: "lastLoginAt",
-      width: 100,
-      render: (date: string | null) =>
-        date ? new Date(date).toLocaleString() : t("systemSettings.neverLogin"),
-    },
-    {
-      title: t("systemSettings.userCreatedAt"),
-      dataIndex: "createdAt",
-      key: "createdAt",
-      width: 120,
-      render: (date: string) => new Date(date).toLocaleDateString(),
-    },
-    {
-      title: t("systemSettings.userActions"),
-      key: "actions",
-      width: 280,
-      render: (_, record) => {
-        const isCurrentUser = record.id === user.id;
-        const isSuperAdminUser = record.role === "superadmin";
-
-        return (
-          <Space size="small">
-            <Select
-              size="small"
-              value={record.role}
-              disabled={isCurrentUser || isSuperAdminUser}
-              style={{ width: 120 }}
-              onChange={(role) => handleChangeRole(record.id, role)}
-              options={[
-                { value: "user", label: t("systemSettings.roleUser") },
-                { value: "admin", label: t("systemSettings.roleAdmin") },
-                {
-                  value: "superadmin",
-                  label: t("systemSettings.roleSuperAdmin"),
-                },
-              ]}
-            />
-            <Button
-              size="small"
-              disabled={isCurrentUser}
-              onClick={() =>
-                setResetPasswordModal({
-                  open: true,
-                  userId: record.id,
-                  userName: record.name,
-                })
-              }
-            >
-              {t("systemSettings.resetPassword")}
-            </Button>
-            <Popconfirm
-              title={t("systemSettings.confirmDelete")}
-              description={t("systemSettings.confirmDeleteDesc", {
-                name: record.name,
-              })}
-              onConfirm={() => handleDeleteUser(record.id)}
-              disabled={isCurrentUser || isSuperAdminUser}
-            >
-              <Button
-                size="small"
-                danger
-                disabled={isCurrentUser || isSuperAdminUser}
-              >
-                {t("systemSettings.deleteUser")}
-              </Button>
-            </Popconfirm>
-          </Space>
-        );
-      },
-    },
-  ];
-
-  const generalTab = (
-    <div className="space-y-6">
-      <Form layout="vertical">
-        <Form.Item
-          label={t("systemSettings.allowRegistration")}
-          extra={t("systemSettings.allowRegistrationDesc")}
-        >
-          <Switch
-            checked={settingsQuery.data?.allowRegistration ?? true}
-            onChange={handleToggleRegistration}
-            loading={updateSettingsMutation.isPending}
-          />
-        </Form.Item>
-        {/* 仅当超管且未被环境变量覆盖时显示单一空间模式开关 */}
-        {isSuperAdmin && !settingsQuery.data?.singleWorkspaceModeOverridden && (
-          <Form.Item
-            label={t("systemSettings.singleWorkspaceMode")}
-            extra={t("systemSettings.singleWorkspaceModeDesc")}
-          >
-            <Switch
-              checked={settingsQuery.data?.singleWorkspaceMode ?? false}
-              onChange={handleToggleSingleWorkspaceMode}
-              loading={updateSettingsMutation.isPending}
-            />
-          </Form.Item>
-        )}
-      </Form>
-    </div>
-  );
-
-  const usersTab = (
-    <div className="space-y-4">
-      <div className="flex justify-end">
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => setAddUserModal(true)}
-        >
-          {t("systemSettings.addUser")}
-        </Button>
-      </div>
-      <Table
-        columns={columns}
-        dataSource={usersQuery.data ?? []}
-        rowKey="id"
-        loading={usersQuery.isLoading}
-        size="small"
-        scroll={{ x: 900 }}
-        pagination={{ pageSize: 10 }}
-      />
-    </div>
-  );
-
-  const invitationColumns: ColumnsType<InvitationCode> = [
-    {
-      title: t("systemSettings.invitationCode"),
-      dataIndex: "code",
-      key: "code",
-      render: (code: string) => (
-        <Tooltip title={code}>
-          <code className="text-xs">{code.slice(0, 8)}...</code>
-        </Tooltip>
-      ),
-    },
-    {
-      title: t("systemSettings.invitationStatus"),
-      key: "status",
-      render: (_, record) => getInvitationStatus(record),
-    },
-    {
-      title: t("systemSettings.invitationExpiresAt"),
-      dataIndex: "expiresAt",
-      key: "expiresAt",
-      render: (date: string | null) =>
-        date
-          ? new Date(date).toLocaleString()
-          : t("systemSettings.invitationNeverExpire"),
-    },
-    {
-      title: t("systemSettings.invitationCreatedAt"),
-      dataIndex: "createdAt",
-      key: "createdAt",
-      render: (date: string) => new Date(date).toLocaleString(),
-    },
-    {
-      title: t("systemSettings.userActions"),
-      key: "actions",
-      render: (_, record) => {
-        const isUsed = !!record.usedBy;
-        return (
-          <Space size="small">
-            <Button
-              size="small"
-              icon={<CopyOutlined />}
-              disabled={isUsed}
-              onClick={() => handleCopyInvitationLink(record.code)}
-            >
-              {t("systemSettings.copyInvitationLink")}
-            </Button>
-            <Popconfirm
-              title={t("systemSettings.confirmDelete")}
-              onConfirm={() => handleDeleteInvitation(record.id)}
-            >
-              <Button size="small" danger>
-                {t("systemSettings.deleteInvitation")}
-              </Button>
-            </Popconfirm>
-          </Space>
-        );
-      },
-    },
-  ];
-
-  const invitationsTab = (
-    <div className="space-y-4">
-      <div className="flex items-center gap-4">
-        <Space.Compact>
-          <InputNumber
-            placeholder={t("systemSettings.expiresInHours")}
-            min={1}
-            value={invitationExpiresHours}
-            onChange={(v) => setInvitationExpiresHours(v)}
-            style={{ width: 140 }}
-          />
-          <Button disabled>{t("systemSettings.hoursUnit")}</Button>
-        </Space.Compact>
-        <span className="text-slate-500 text-sm">
-          {invitationExpiresHours ? "" : t("systemSettings.noExpiration")}
-        </span>
-        <Button
-          type="primary"
-          icon={<LinkOutlined />}
-          onClick={handleGenerateInvitation}
-          loading={generateInvitationMutation.isPending}
-        >
-          {t("systemSettings.generateInvitation")}
-        </Button>
-      </div>
-      <Table
-        columns={invitationColumns}
-        dataSource={invitationsQuery.data ?? []}
-        rowKey="id"
-        loading={invitationsQuery.isLoading}
-        size="small"
-        pagination={{ pageSize: 10 }}
-      />
-    </div>
-  );
-
-  const tabItems = [
-    {
-      key: "general",
-      label: t("systemSettings.generalTab"),
-      children: generalTab,
-    },
-    // 超管才显示用户管理 Tab
+  const tabs = [
+    { key: "general", label: t("systemSettings.generalTab") },
     ...(isSuperAdmin
       ? [
-          {
-            key: "users",
-            label: t("systemSettings.usersTab"),
-            children: usersTab,
-          },
-          {
-            key: "invitations",
-            label: t("systemSettings.invitationTab"),
-            children: invitationsTab,
-          },
+          { key: "users", label: t("systemSettings.usersTab") },
+          { key: "invitations", label: t("systemSettings.invitationTab") },
         ]
       : []),
   ];
@@ -466,58 +249,405 @@ export default function SystemSettingsModal({
     <>
       <Modal
         open={open}
-        onCancel={onClose}
+        onClose={onClose}
         title={t("systemSettings.title")}
-        footer={null}
-        width={isSuperAdmin ? 900 : 500}
-        destroyOnHidden
+        size={isSuperAdmin ? "xl" : "md"}
       >
-        <Tabs items={tabItems} />
+        {/* Tabs */}
+        <div className="border-b border-[var(--ui-border)] mb-4">
+          <nav className="-mb-px flex gap-4">
+            {tabs.map((tab) => (
+              <button
+                key={tab.key}
+                type="button"
+                onClick={() => setActiveTab(tab.key)}
+                className={`pb-3 text-sm font-medium border-b-2 transition-colors ${
+                  activeTab === tab.key
+                    ? "border-blue-500 text-blue-600 dark:text-blue-400"
+                    : "border-transparent text-[var(--ui-text-muted)] hover:text-[var(--ui-text)]"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </nav>
+        </div>
+
+        {/* General Tab */}
+        {activeTab === "general" && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-[var(--ui-text)]">
+                  {t("systemSettings.allowRegistration")}
+                </p>
+                <p className="text-xs text-[var(--ui-text-muted)] mt-1">
+                  {t("systemSettings.allowRegistrationDesc")}
+                </p>
+              </div>
+              <Toggle
+                checked={settingsQuery.data?.allowRegistration ?? true}
+                onChange={handleToggleRegistration}
+                disabled={updateSettingsMutation.isPending}
+              />
+            </div>
+            {isSuperAdmin &&
+              !settingsQuery.data?.singleWorkspaceModeOverridden && (
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-[var(--ui-text)]">
+                      {t("systemSettings.singleWorkspaceMode")}
+                    </p>
+                    <p className="text-xs text-[var(--ui-text-muted)] mt-1">
+                      {t("systemSettings.singleWorkspaceModeDesc")}
+                    </p>
+                  </div>
+                  <Toggle
+                    checked={settingsQuery.data?.singleWorkspaceMode ?? false}
+                    onChange={handleToggleSingleWorkspaceMode}
+                    disabled={updateSettingsMutation.isPending}
+                  />
+                </div>
+              )}
+          </div>
+        )}
+
+        {/* Users Tab */}
+        {activeTab === "users" && isSuperAdmin && (
+          <div className="space-y-4">
+            <div className="flex justify-end">
+              <Button size="sm" onClick={() => setAddUserModal(true)}>
+                + {t("systemSettings.addUser")}
+              </Button>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-[var(--ui-border)]">
+                    <th className="py-2 px-3 text-left font-medium text-[var(--ui-text-muted)]">
+                      {t("systemSettings.userNameColumn")}
+                    </th>
+                    <th className="py-2 px-3 text-left font-medium text-[var(--ui-text-muted)]">
+                      {t("systemSettings.emailColumn")}
+                    </th>
+                    <th className="py-2 px-3 text-left font-medium text-[var(--ui-text-muted)]">
+                      {t("systemSettings.userRole")}
+                    </th>
+                    <th className="py-2 px-3 text-left font-medium text-[var(--ui-text-muted)]">
+                      {t("systemSettings.lastLoginAt")}
+                    </th>
+                    <th className="py-2 px-3 text-left font-medium text-[var(--ui-text-muted)]">
+                      {t("systemSettings.userActions")}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(usersQuery.data ?? []).map((record: AdminUser) => {
+                    const isCurrentUser = record.id === user.id;
+                    const isSuperAdminUser = record.role === "superadmin";
+                    return (
+                      <tr
+                        key={record.id}
+                        className="border-b border-[var(--ui-border)] last:border-0"
+                      >
+                        <td className="py-2 px-3">{record.name}</td>
+                        <td className="py-2 px-3 text-[var(--ui-text-muted)]">
+                          {record.email}
+                        </td>
+                        <td className="py-2 px-3">
+                          <RoleBadge role={record.role} />
+                        </td>
+                        <td className="py-2 px-3 text-xs text-[var(--ui-text-muted)]">
+                          {record.lastLoginAt
+                            ? new Date(record.lastLoginAt).toLocaleString()
+                            : t("systemSettings.neverLogin")}
+                        </td>
+                        <td className="py-2 px-3">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <Select
+                              value={record.role}
+                              disabled={isCurrentUser || isSuperAdminUser}
+                              onChange={(role) =>
+                                handleChangeRole(record.id, role as UserRole)
+                              }
+                              options={[
+                                {
+                                  value: "user",
+                                  label: t("systemSettings.roleUser"),
+                                },
+                                {
+                                  value: "admin",
+                                  label: t("systemSettings.roleAdmin"),
+                                },
+                                {
+                                  value: "superadmin",
+                                  label: t("systemSettings.roleSuperAdmin"),
+                                },
+                              ]}
+                              className="w-28"
+                            />
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              disabled={isCurrentUser}
+                              onClick={() =>
+                                setResetPasswordModal({
+                                  open: true,
+                                  userId: record.id,
+                                  userName: record.name,
+                                })
+                              }
+                            >
+                              {t("systemSettings.resetPassword")}
+                            </Button>
+                            {confirmDeleteUser === record.id ? (
+                              <div className="flex items-center gap-1">
+                                <Button
+                                  size="sm"
+                                  variant="danger"
+                                  onClick={() => handleDeleteUser(record.id)}
+                                >
+                                  {t("common.confirm")}
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => setConfirmDeleteUser(null)}
+                                >
+                                  {t("common.cancel")}
+                                </Button>
+                              </div>
+                            ) : (
+                              <Button
+                                size="sm"
+                                variant="danger"
+                                disabled={isCurrentUser || isSuperAdminUser}
+                                onClick={() => setConfirmDeleteUser(record.id)}
+                              >
+                                {t("systemSettings.deleteUser")}
+                              </Button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+              {usersQuery.isLoading && (
+                <div className="py-8 text-center text-[var(--ui-text-muted)]">
+                  Loading...
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Invitations Tab */}
+        {activeTab === "invitations" && isSuperAdmin && (
+          <div className="space-y-4">
+            <div className="flex items-center gap-3 flex-wrap">
+              <div className="flex items-center gap-2">
+                <Input
+                  type="number"
+                  placeholder={t("systemSettings.expiresInHours")}
+                  value={invitationExpiresHours}
+                  onChange={(e) => setInvitationExpiresHours(e.target.value)}
+                  className="w-32"
+                />
+                <span className="text-sm text-[var(--ui-text-muted)]">
+                  {t("systemSettings.hoursUnit")}
+                </span>
+              </div>
+              <span className="text-xs text-[var(--ui-text-subtle)]">
+                {invitationExpiresHours ? "" : t("systemSettings.noExpiration")}
+              </span>
+              <Button
+                size="sm"
+                onClick={handleGenerateInvitation}
+                disabled={generateInvitationMutation.isPending}
+              >
+                🔗 {t("systemSettings.generateInvitation")}
+              </Button>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-[var(--ui-border)]">
+                    <th className="py-2 px-3 text-left font-medium text-[var(--ui-text-muted)]">
+                      {t("systemSettings.invitationCode")}
+                    </th>
+                    <th className="py-2 px-3 text-left font-medium text-[var(--ui-text-muted)]">
+                      {t("systemSettings.invitationStatus")}
+                    </th>
+                    <th className="py-2 px-3 text-left font-medium text-[var(--ui-text-muted)]">
+                      {t("systemSettings.invitationExpiresAt")}
+                    </th>
+                    <th className="py-2 px-3 text-left font-medium text-[var(--ui-text-muted)]">
+                      {t("systemSettings.invitationCreatedAt")}
+                    </th>
+                    <th className="py-2 px-3 text-left font-medium text-[var(--ui-text-muted)]">
+                      {t("systemSettings.userActions")}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(invitationsQuery.data ?? []).map(
+                    (record: InvitationCode) => {
+                      const isUsed = !!record.usedBy;
+                      return (
+                        <tr
+                          key={record.id}
+                          className="border-b border-[var(--ui-border)] last:border-0"
+                        >
+                          <td className="py-2 px-3">
+                            <code
+                              className="text-xs cursor-help"
+                              title={record.code}
+                            >
+                              {record.code.slice(0, 8)}...
+                            </code>
+                          </td>
+                          <td className="py-2 px-3">
+                            <InvitationStatusBadge invitation={record} />
+                          </td>
+                          <td className="py-2 px-3 text-xs text-[var(--ui-text-muted)]">
+                            {record.expiresAt
+                              ? new Date(record.expiresAt).toLocaleString()
+                              : t("systemSettings.invitationNeverExpire")}
+                          </td>
+                          <td className="py-2 px-3 text-xs text-[var(--ui-text-muted)]">
+                            {new Date(record.createdAt).toLocaleString()}
+                          </td>
+                          <td className="py-2 px-3">
+                            <div className="flex items-center gap-2">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                disabled={isUsed}
+                                onClick={() =>
+                                  handleCopyInvitationLink(record.code)
+                                }
+                              >
+                                📋 {t("systemSettings.copyInvitationLink")}
+                              </Button>
+                              {confirmDeleteInvitation === record.id ? (
+                                <div className="flex items-center gap-1">
+                                  <Button
+                                    size="sm"
+                                    variant="danger"
+                                    onClick={() =>
+                                      handleDeleteInvitation(record.id)
+                                    }
+                                  >
+                                    {t("common.confirm")}
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() =>
+                                      setConfirmDeleteInvitation(null)
+                                    }
+                                  >
+                                    {t("common.cancel")}
+                                  </Button>
+                                </div>
+                              ) : (
+                                <Button
+                                  size="sm"
+                                  variant="danger"
+                                  onClick={() =>
+                                    setConfirmDeleteInvitation(record.id)
+                                  }
+                                >
+                                  {t("systemSettings.deleteInvitation")}
+                                </Button>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    },
+                  )}
+                </tbody>
+              </table>
+              {invitationsQuery.isLoading && (
+                <div className="py-8 text-center text-[var(--ui-text-muted)]">
+                  Loading...
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </Modal>
 
-      {/* 重置密码模态框 */}
+      {/* Reset Password Modal */}
       <Modal
         open={resetPasswordModal.open}
-        onCancel={() => {
+        onClose={() => {
           setResetPasswordModal({ open: false, userId: "", userName: "" });
           setNewPassword("");
         }}
         title={t("systemSettings.resetPasswordTitle")}
-        onOk={handleResetPassword}
-        confirmLoading={forceResetPasswordMutation.isPending}
       >
-        <p className="mb-4 text-slate-600 dark:text-slate-400">
+        <p className="mb-4 text-sm text-[var(--ui-text-muted)]">
           {t("systemSettings.resetPasswordDesc", {
             name: resetPasswordModal.userName,
           })}
         </p>
-        <Form layout="vertical">
-          <Form.Item label={t("systemSettings.newPassword")} required>
-            <Input.Password
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-[var(--ui-text)] mb-1">
+              {t("systemSettings.newPassword")}
+            </label>
+            <Input
+              type="password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               placeholder={t("systemSettings.newPasswordPlaceholder")}
             />
-          </Form.Item>
-        </Form>
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setResetPasswordModal({
+                  open: false,
+                  userId: "",
+                  userName: "",
+                });
+                setNewPassword("");
+              }}
+            >
+              {t("common.cancel")}
+            </Button>
+            <Button
+              onClick={handleResetPassword}
+              disabled={forceResetPasswordMutation.isPending}
+            >
+              {t("common.confirm")}
+            </Button>
+          </div>
+        </div>
       </Modal>
 
-      {/* 添加用户模态框 */}
+      {/* Add User Modal */}
       <Modal
         open={addUserModal}
-        onCancel={() => {
+        onClose={() => {
           setAddUserModal(false);
           setAddUserForm({ name: "", email: "", password: "", role: "user" });
         }}
         title={t("systemSettings.addUserTitle")}
-        onOk={handleAddUser}
-        confirmLoading={createUserMutation.isPending}
       >
-        <p className="mb-4 text-slate-600 dark:text-slate-400">
+        <p className="mb-4 text-sm text-[var(--ui-text-muted)]">
           {t("systemSettings.addUserDesc")}
         </p>
-        <Form layout="vertical">
-          <Form.Item label={t("systemSettings.userName")} required>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-[var(--ui-text)] mb-1">
+              {t("systemSettings.userName")}
+            </label>
             <Input
               value={addUserForm.name}
               onChange={(e) =>
@@ -525,8 +655,11 @@ export default function SystemSettingsModal({
               }
               placeholder={t("systemSettings.usernamePlaceholder")}
             />
-          </Form.Item>
-          <Form.Item label={t("systemSettings.userEmail")} required>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-[var(--ui-text)] mb-1">
+              {t("systemSettings.userEmail")}
+            </label>
             <Input
               type="email"
               value={addUserForm.email}
@@ -535,20 +668,29 @@ export default function SystemSettingsModal({
               }
               placeholder={t("systemSettings.emailPlaceholder")}
             />
-          </Form.Item>
-          <Form.Item label={t("systemSettings.userPassword")} required>
-            <Input.Password
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-[var(--ui-text)] mb-1">
+              {t("systemSettings.userPassword")}
+            </label>
+            <Input
+              type="password"
               value={addUserForm.password}
               onChange={(e) =>
                 setAddUserForm((f) => ({ ...f, password: e.target.value }))
               }
               placeholder={t("systemSettings.passwordPlaceholder")}
             />
-          </Form.Item>
-          <Form.Item label={t("systemSettings.userRoleSelect")}>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-[var(--ui-text)] mb-1">
+              {t("systemSettings.userRoleSelect")}
+            </label>
             <Select
               value={addUserForm.role}
-              onChange={(role) => setAddUserForm((f) => ({ ...f, role }))}
+              onChange={(role) =>
+                setAddUserForm((f) => ({ ...f, role: role as UserRole }))
+              }
               options={[
                 { value: "user", label: t("systemSettings.roleUser") },
                 { value: "admin", label: t("systemSettings.roleAdmin") },
@@ -558,8 +700,30 @@ export default function SystemSettingsModal({
                 },
               ]}
             />
-          </Form.Item>
-        </Form>
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setAddUserModal(false);
+                setAddUserForm({
+                  name: "",
+                  email: "",
+                  password: "",
+                  role: "user",
+                });
+              }}
+            >
+              {t("common.cancel")}
+            </Button>
+            <Button
+              onClick={handleAddUser}
+              disabled={createUserMutation.isPending}
+            >
+              {t("common.confirm")}
+            </Button>
+          </div>
+        </div>
       </Modal>
     </>
   );

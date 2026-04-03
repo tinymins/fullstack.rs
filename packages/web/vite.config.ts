@@ -1,14 +1,25 @@
-import react from "@vitejs/plugin-react";
+import { resolve } from "node:path";
+import { reactRouter } from "@react-router/dev/vite";
+import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
-import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
-  plugins: [react(), tsconfigPaths()],
+  plugins: [reactRouter(), tailwindcss()],
+  resolve: {
+    tsconfigPaths: true,
+    alias: {
+      "@/": `${resolve(__dirname, "src")}/`,
+    },
+  },
   server: {
-    host: "0.0.0.0", // 监听所有网络接口，允许内网访问
+    host: "0.0.0.0",
     port: 5173,
     proxy: {
       "/trpc": {
+        target: "http://localhost:4000",
+        changeOrigin: true,
+      },
+      "/upload": {
         target: "http://localhost:4000",
         changeOrigin: true,
       },

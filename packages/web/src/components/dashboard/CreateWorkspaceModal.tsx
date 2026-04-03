@@ -1,10 +1,9 @@
-import { Form, Input, Modal, Typography } from "antd";
-import { useState } from "react";
+import { Button, Input, Modal } from "@acme/components";
+import { slugify } from "@acme/types";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useMessage } from "../../hooks";
-import { trpc } from "../../lib/trpc";
-
-const { Text } = Typography;
+import { message } from "@/lib/message";
+import { trpc } from "@/lib/trpc";
 
 interface CreateWorkspaceModalProps {
   open: boolean;
@@ -17,129 +16,88 @@ export default function CreateWorkspaceModal({
   onClose,
   onSuccess,
 }: CreateWorkspaceModalProps) {
-  const [form] = Form.useForm();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [slugValue, setSlugValue] = useState("");
-  const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false);
-  const utils = trpc.useUtils();
-  const message = useMessage();
   const { t } = useTranslation();
+  const [name, setName] = useState("");
+  const [slug, setSlug] = useState("");
+  const [slugEdited, setSlugEdited] = useState(false);
+  const [description, setDescription] = useState("");
+  const utils = trpc.useUtils();
 
   const createMutation = trpc.workspace.create.useMutation({
     onSuccess: async (data) => {
-      message.success(t("createWorkspace.success"));
+      message.success(t("workspace.createSuccess"));
       await utils.workspace.list.invalidate();
-      form.resetFields();
-      onClose();
+      reset();
       onSuccess?.(data);
     },
-    onError: (error) => {
-      message.error(error.message || t("createWorkspace.failed"));
+    onError: (err) => {
+      message.error(err.message || t("workspace.createFailed"));
     },
   });
 
-  const handleSubmit = async () => {
-    try {
-      setIsSubmitting(true);
-      const values = await form.validateFields();
-      await createMutation.mutateAsync({
-        name: values.name,
-        slug: values.slug || undefined,
-        description: values.description,
-      });
-    } catch (error) {
-      // Form validation error or mutation error
-      console.error("Submit error:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
+  const reset = useCallback(() => {
+    setName("");
+    setSlug("");
+    setSlugEdited(false);
+    setDescription("");
+  }, []);
+
+  useEffect(() => {
+    if (!open) reset();
+  }, [open, reset]);
+
+  const handleNameChange = (v: string) => {
+    setName(v);
+    if (!slugEdited) setSlug(slugify(v));
   };
 
-  const handleCancel = () => {
-    form.resetFields();
-    setSlugValue("");
-    setIsSlugManuallyEdited(false);
-    onClose();
-  };
-
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const name = e.target.value;
-    // 只在用户未手动修改过 slug 时自动生成
-    if (!isSlugManuallyEdited) {
-      const autoSlug = name
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)+/g, "");
-      form.setFieldValue("slug", autoSlug);
-      setSlugValue(autoSlug);
-    }
-  };
-
-  const handleSlugChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSlugValue(e.target.value);
-    setIsSlugManuallyEdited(true);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await createMutation.mutateAsync({
+      name,
+      slug: slug || undefined,
+      description: description || undefined,
+    });
   };
 
   return (
-    <Modal
-      title={t("createWorkspace.title")}
-      open={open}
-      onOk={handleSubmit}
-      onCancel={handleCancel}
-      confirmLoading={isSubmitting}
-      okText={t("createWorkspace.create")}
-      cancelText={t("createWorkspace.cancel")}
-    >
-      <Form form={form} layout="vertical" className="mt-6">
-        <Form.Item
-          name="name"
-          label={t("createWorkspace.nameLabel")}
-          rules={[
-            { required: true, message: t("createWorkspace.nameRequired") },
-            { min: 1, max: 50, message: t("createWorkspace.nameLength") },
-          ]}
-        >
-          <Input
-            placeholder={t("createWorkspace.namePlaceholder")}
-            maxLength={50}
-            onChange={handleNameChange}
-          />
-        </Form.Item>
-
-        <Form.Item
-          name="slug"
-          label={t("createWorkspace.slugLabel")}
-          rules={[
-            { required: true, message: t("createWorkspace.slugRequired") },
-            {
-              pattern: /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
-              message: t("createWorkspace.slugPattern"),
-            },
-          ]}
-          extra={
-            slugValue && (
-              <Text type="secondary" className="text-xs">
-                {t("createWorkspace.slugExtra", { slug: slugValue })}
-              </Text>
-            )
-          }
-        >
-          <Input
-            placeholder="e.g., my-project"
-            maxLength={50}
-            onChange={handleSlugChange}
-          />
-        </Form.Item>
-
-        <Form.Item name="description" label={t("createWorkspace.descLabel")}>
-          <Input.TextArea
-            placeholder={t("createWorkspace.descPlaceholder")}
-            rows={3}
-            maxLength={200}
-          />
-        </Form.Item>
-      </Form>
+    <Modal open={open} onClose={onClose} title={t("workspace.new")}>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <Input
+          label={t("workspace.name")}
+          value={name}
+          onChange={(e) => handleNameChange(e.target.value)}
+          required
+          placeholder={t("workspace.namePlaceholder")}
+        />
+        <Input
+          label={t("workspace.slugLabel")}
+          value={slug}
+          onChange={(e) => {
+            setSlug(e.target.value);
+            setSlugEdited(true);
+          }}
+          placeholder={t("workspace.slugPlaceholder")}
+        />
+        <Input
+          label={t("workspace.description")}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+        <div className="flex gap-3 pt-2">
+          <Button variant="secondary" fullWidth type="button" onClick={onClose}>
+            {t("common.cancel")}
+          </Button>
+          <Button
+            variant="primary"
+            fullWidth
+            type="submit"
+            loading={createMutation.isPending}
+          >
+            {t("workspace.create")}
+          </Button>
+        </div>
+      </form>
     </Modal>
   );
 }

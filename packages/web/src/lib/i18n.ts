@@ -22,7 +22,7 @@ i18n
       caches: ["cookie"],
       cookieMinutes: 525600,
     },
-    returnObjects: true,
+    returnObjects: true, // Allow returning objects and arrays
   });
 
 export default i18n;
