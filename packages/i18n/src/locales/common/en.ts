@@ -46,5 +46,6 @@ export const commonEn: CommonSchema = {
     getStarted: "Get started",
     langZh: "中文",
     langEn: "English",
+    loading: "Loading...",
   },
 };

@@ -1,9 +1,22 @@
 import { useTranslation } from "react-i18next";
-import type { MetaFunction } from "react-router";
+import type { LoaderFunctionArgs, MetaFunction } from "react-router";
 import ErrorPage from "@/components/error/ErrorPage";
 
-export const meta: MetaFunction = () => [
-  { title: "页面不存在 — AI Stack" },
+function parseLang(cookieHeader: string): "zh" | "en" {
+  return /(?:^|;\s*)i18next=en/.test(cookieHeader) ? "en" : "zh";
+}
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  return { lang: parseLang(request.headers.get("Cookie") ?? "") };
+}
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => [
+  {
+    title:
+      data?.lang === "en"
+        ? "Page Not Found — AI Stack"
+        : "页面不存在 — AI Stack",
+  },
   { name: "robots", content: "noindex, nofollow" },
 ];
 

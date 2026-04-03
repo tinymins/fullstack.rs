@@ -1,6 +1,7 @@
 import { adminEn } from "./admin/en.js";
 import { authEn } from "./auth/en.js";
 import { commonEn } from "./common/en.js";
+import { dashboardEn } from "./dashboard/en.js";
 import { landingEn } from "./landing/en.js";
 import { userEn } from "./user/en.js";
 import { workspaceEn } from "./workspace/en.js";
@@ -14,9 +15,11 @@ export const en: TranslationSchema = {
       user: userEn.errors,
       workspace: workspaceEn.errors,
       admin: adminEn.errors,
+      dashboard: dashboardEn.errors,
     },
     auth: authEn.ui,
     common: commonEn.ui,
+    dashboard: dashboardEn.ui,
     landing: landingEn.ui,
     user: userEn.ui,
     workspace: workspaceEn.ui,

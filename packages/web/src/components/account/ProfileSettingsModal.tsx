@@ -63,7 +63,12 @@ export default function ProfileSettingsModal({
   };
 
   return (
-    <Modal open={open} onCancel={onClose} title={t("user.profileSettings")}>
+    <Modal
+      open={open}
+      onCancel={onClose}
+      title={t("user.profileSettings")}
+      footer={null}
+    >
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Avatar upload */}
         <div className="flex items-center gap-4">

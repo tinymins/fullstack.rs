@@ -216,8 +216,8 @@ const SIZE_CONFIG: Record<ScaledModalSize, SizeConfig> = {
 export function Modal({
   open = false,
   title,
-  okText = "确定",
-  cancelText = "取消",
+  okText = "OK",
+  cancelText = "Cancel",
   okButtonProps,
   cancelButtonProps,
   onOk,
@@ -504,8 +504,8 @@ Modal.confirm = (config: ConfirmConfig) => {
         <Modal
           open={open}
           title={config.title}
-          okText={config.okText ?? "确定"}
-          cancelText={config.cancelText ?? "取消"}
+          okText={config.okText ?? "OK"}
+          cancelText={config.cancelText ?? "Cancel"}
           okButtonProps={config.okButtonProps}
           confirmLoading={loading}
           maskClosable={!loading}

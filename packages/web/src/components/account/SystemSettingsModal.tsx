@@ -436,7 +436,7 @@ export default function SystemSettingsModal({
               </table>
               {usersQuery.isLoading && (
                 <div className="py-8 text-center text-[var(--text-muted)]">
-                  Loading...
+                  {t("common.loading")}
                 </div>
               )}
             </div>
@@ -573,7 +573,7 @@ export default function SystemSettingsModal({
               </table>
               {invitationsQuery.isLoading && (
                 <div className="py-8 text-center text-[var(--text-muted)]">
-                  Loading...
+                  {t("common.loading")}
                 </div>
               )}
             </div>

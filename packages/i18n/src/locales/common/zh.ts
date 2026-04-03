@@ -43,6 +43,7 @@ export const commonZh = {
     getStarted: "开始使用",
     langZh: "中文",
     langEn: "English",
+    loading: "加载中...",
   },
 };
 

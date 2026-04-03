@@ -1,12 +1,22 @@
 import { useEffect } from "react";
-import type { MetaFunction } from "react-router";
+import type { LoaderFunctionArgs, MetaFunction } from "react-router";
 import { Outlet, useNavigate, useNavigation } from "react-router";
 import { WorkspaceRedirectSkeleton } from "@/components/skeleton";
 import { useAuth, WorkspaceListContext } from "@/hooks";
 import { trpc } from "@/lib/trpc";
 
-export const meta: MetaFunction = () => [
-  { title: "控制台 — AI Stack" },
+function parseLang(cookieHeader: string): "zh" | "en" {
+  return /(?:^|;\s*)i18next=en/.test(cookieHeader) ? "en" : "zh";
+}
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  return { lang: parseLang(request.headers.get("Cookie") ?? "") };
+}
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => [
+  {
+    title: data?.lang === "en" ? "Dashboard — AI Stack" : "控制台 — AI Stack",
+  },
   { name: "robots", content: "noindex, nofollow" },
 ];
 
