@@ -1,11 +1,11 @@
 # Rust Backend Guide
 
-`packages/rust-server/` 是基于 Axum 的 HTTP 服务器骨架，使用 Sea-ORM 连接 PostgreSQL。
+`packages/server/` 是基于 Axum 的 HTTP 服务器骨架，使用 Sea-ORM 连接 PostgreSQL。
 
 ## 项目结构
 
 ```
-packages/rust-server/
+packages/server/
 ├── src/
 │   ├── main.rs          # 服务器入口
 │   ├── lib.rs           # AppState 定义 + 模块导出
@@ -252,7 +252,7 @@ import type { UserOutput } from "@/generated/rust-types/UserOutput";
 make dev
 
 # 或手动启动
-cd packages/rust-server
+cd packages/server
 ./dev-watch.sh   # 文件监听 + 自动重编译
 ```
 
@@ -273,7 +273,7 @@ cd packages/rust-server
 
 ```bash
 # Release 编译
-cd packages/rust-server
+cd packages/server
 cargo build --release
 
 # 输出：target/release/rs-fullstack-server
@@ -287,7 +287,7 @@ make docker
 
 流程：
 1. `cargo build --release`（宿主机编译 Rust 二进制）
-2. `docker build -f packages/rust-server/Dockerfile`（多阶段构建）
+2. `docker build -f packages/server/Dockerfile`（多阶段构建）
 
 ### Dockerfile 多阶段
 

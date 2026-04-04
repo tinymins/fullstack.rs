@@ -65,7 +65,7 @@ make docker
 |------|--------|------|
 | `RUST_SERVER` | — | 开发环境后端 URL（如 `http://localhost:5678`） |
 
-### `packages/rust-server/.env`
+### `packages/server/.env`
 
 | 变量 | 默认值 | 说明 |
 |------|--------|------|

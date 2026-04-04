@@ -128,7 +128,7 @@ cd packages/wasm && wasm-pack build --release --target bundler --out-dir pkg
 make gen:api
 
 # 手动运行（等效命令）
-cd packages/rust-server && TS_RS_EXPORT_DIR="../web/src/generated/rust-types" cargo test --lib
+cd packages/server && TS_RS_EXPORT_DIR="../web/src/generated/rust-types" cargo test --lib
 ```
 
 ## 调试技巧
@@ -137,7 +137,7 @@ cd packages/rust-server && TS_RS_EXPORT_DIR="../web/src/generated/rust-types" ca
 
 - **查看详细日志**：设置 `RUST_LOG=debug` 或 `LOG_LEVEL=debug`
 - **SQL 查询日志**：PrettyFormatter 自动显示 >10ms 的 SQL 查询
-- **跳过文件监听**：直接运行 `cd packages/rust-server && ./dev-run.sh` 单次启动
+- **跳过文件监听**：直接运行 `cd packages/server && ./dev-run.sh` 单次启动
 
 ### 前端
 
@@ -171,6 +171,6 @@ cd packages/rust-server && TS_RS_EXPORT_DIR="../web/src/generated/rust-types" ca
 | `docker/.env` | ❌ | 生产环境配置 |
 | `docker/.env.example` | ✅ | 生产 `.env` 模板 |
 | `packages/web/.env` | ❌ | 前端配置（`RUST_SERVER`） |
-| `packages/rust-server/.env` | ❌ | 后端配置（`LOG_LEVEL`） |
+| `packages/server/.env` | ❌ | 后端配置（`LOG_LEVEL`） |
 
 首次初始化时 `make init` 会自动从 `.env.example` 创建 `.env`。

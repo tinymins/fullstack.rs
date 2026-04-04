@@ -1,5 +1,5 @@
 {
-  "name": "@acme/rust-server",
+  "name": "@acme/server",
   "private": true,
   "scripts": {
     "dev": "bash ./dev-watch.sh",

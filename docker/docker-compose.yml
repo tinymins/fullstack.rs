@@ -25,7 +25,7 @@ services:
     container_name: rs-fullstack-server
     build:
       context: ..
-      dockerfile: packages/rust-server/Dockerfile
+      dockerfile: packages/server/Dockerfile
     ports:
       - "${WEB_PORT:-8080}:5678"
     environment:

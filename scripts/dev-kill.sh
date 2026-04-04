@@ -14,7 +14,7 @@ PORTS=(5173 5174 5678)
 
 PROCESS_PATTERNS=(
   "rs-fullstack-server"
-  "watchexec.*rust-server"
+  "watchexec.*server"
   "turbo dev"
   "vite"
 )

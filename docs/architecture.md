@@ -34,7 +34,7 @@ ACME Stack 是一个全栈 Web 应用脚手架，采用 pnpm monorepo 管理，R
 ```
 react-nestjs-ai-boilerplate/
 ├── packages/
-│   ├── rust-server/     # Rust 后端（Axum + Sea-ORM）
+│   ├── server/          # Rust 后端（Axum + Sea-ORM）
 │   ├── wasm/            # WebAssembly 模块
 │   ├── web/             # React 前端（Vite）
 │   ├── components/      # 通用 UI 组件库
@@ -59,7 +59,7 @@ react-nestjs-ai-boilerplate/
     │
     └──→ generated/rust-types/  (ts-rs 生成)
               ↑
-        rust-server (cargo test → ts-rs export)
+            server (cargo test → ts-rs export)
 ```
 
 ## 后端：Rust / Axum

@@ -43,9 +43,9 @@ make gen:api  # 从 Rust 生成 TypeScript 类型
 
 ```
 packages/
-  rust-server/  Rust (Axum + Sea-ORM) 后端
+  server/       Rust (Axum + Sea-ORM) 后端
   web/          React Router v7 SSR 前端
-  acme-wasm/    WebAssembly 模块
+  wasm/         WebAssembly 模块
   types/        共享 Zod 模式 + TypeScript 类型
   components/   通用 UI 组件（TailwindCSS，无业务逻辑）
   i18n/         国际化资源（5种语言）

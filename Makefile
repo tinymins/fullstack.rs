@@ -146,15 +146,15 @@ build: ## 编译生产版本
 	@printf "$(GREEN)🔨 开始编译...$(NC)\n"
 	@pnpm build
 	@printf "$(BLUE)→ 构建 Rust 二进制 (release)...$(NC)\n"
-	@cd packages/rust-server && cargo build --release
+	@cd packages/server && cargo build --release
 	@printf "$(GREEN)✓ 编译完成$(NC)\n"
 
 docker: ## 构建 Docker 镜像（Rust + 前端）
 	@printf "$(GREEN)🐳 构建 Docker 镜像...$(NC)\n"
 	@printf "$(BLUE)→ 构建 Rust 二进制 (release)...$(NC)\n"
-	@cd packages/rust-server && cargo build --release
+	@cd packages/server && cargo build --release
 	@printf "$(BLUE)→ 构建 $(SERVER_IMAGE) 镜像（含前端）...$(NC)\n"
-	@docker build -f packages/rust-server/Dockerfile -t $(SERVER_IMAGE):latest .
+	@docker build -f packages/server/Dockerfile -t $(SERVER_IMAGE):latest .
 	@printf "$(GREEN)✓ 镜像构建完成$(NC)\n"
 
 gen\:api: ## 从 Rust 生成 TypeScript 类型（ts-rs）

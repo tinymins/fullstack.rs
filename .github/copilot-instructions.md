@@ -10,7 +10,7 @@
 
 | 层 | 包 | 说明 |
 |---|---|---|
-| 后端 | `packages/rust-server/` | Axum + Sea-ORM + PostgreSQL |
+| 后端 | `packages/server/` | Axum + Sea-ORM + PostgreSQL |
 | WASM | `packages/wasm/` | WebAssembly 模块（浏览器端计算） |
 | 前端 | `@acme/web` · `packages/web/` | React 19 + Vite + TanStack Query v5 |
 | UI 组件 | `@acme/components` · `packages/components/` | Tailwind + Lucide，无第三方 UI 框架 |
@@ -50,7 +50,7 @@ docker exec rs-fullstack-postgres psql -U postgres -d rs_fullstack_db -c "SQL"  
 | `.env` | 开发总控：数据库连接 + 功能开关 | Prisma CLI · Rust 后端 · Makefile · dev 数据库容器 |
 | `docker/.env` | 生产环境配置 | `docker/docker-compose.yml`（生产全量部署） |
 | `packages/web/.env` | 前端技术配置 | Vite（RUST_SERVER） |
-| `packages/rust-server/.env` | 后端技术配置 | Rust 进程（LOG_LEVEL） |
+| `packages/server/.env` | 后端技术配置 | Rust 进程（LOG_LEVEL） |
 
 - DATABASE_URL 统一在根 `.env`，不要在子包 `.env` 中重复定义
 - 开发数据库通过 `docker/docker-compose.dev.yml` 启动，读根 `.env` 的 POSTGRES_* 参数
@@ -59,7 +59,7 @@ docker exec rs-fullstack-postgres psql -U postgres -d rs_fullstack_db -c "SQL"  
 
 ```
 packages/
-  rust-server/         # Backend (Rust + Axum + Sea-ORM)
+  server/         # Backend (Rust + Axum + Sea-ORM)
     src/
       main.rs          # Axum 服务器入口（tokio runtime + CLI args）
       lib.rs           # AppState 定义 + 模块导出

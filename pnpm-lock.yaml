@@ -135,7 +135,7 @@ importers:
         specifier: ^4.10.3
         version: 4.11.2(tailwindcss@4.2.2)
 
-  packages/rust-server: {}
+  packages/server: {}
 
   packages/types:
     dependencies:

@@ -26,7 +26,7 @@ mkdirSync(OUT_DIR, { recursive: true });
 // Run cargo test to trigger ts-rs exports
 try {
   execSync("cargo test --lib", {
-    cwd: join(ROOT, "packages/rust-server"),
+    cwd: join(ROOT, "packages/server"),
     env: { ...process.env, TS_RS_EXPORT_DIR: OUT_DIR },
     stdio: "pipe",
   });
