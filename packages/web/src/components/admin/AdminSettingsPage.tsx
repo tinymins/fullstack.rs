@@ -544,7 +544,7 @@ export default function AdminSettingsPage() {
 
   return (
     <>
-      <div className="mx-auto max-w-4xl">
+      <div>
         <h1 className="text-xl font-semibold text-[var(--text-primary)] mb-6">
           {t("systemSettings.title")}
         </h1>
