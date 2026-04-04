@@ -11,11 +11,11 @@ const features = {
     desc: "サーバーサイドレンダリングによる高速な初期表示と優れた SEO パフォーマンス",
   },
   db: {
-    title: "Drizzle ORM",
+    title: "Prisma ORM",
     desc: "型安全なデータベース操作、組み込みのマイグレーション管理と直感的なデータモデリング",
   },
   backend: {
-    title: "NestJS バックエンド",
+    title: "Hono バックエンド",
     desc: "モジュラーアーキテクチャと依存性注入を備えたエンタープライズ級 Node.js フレームワーク",
   },
   tailwind: {

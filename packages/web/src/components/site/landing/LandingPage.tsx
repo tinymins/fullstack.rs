@@ -56,33 +56,33 @@ function GlobeIcon() {
 const FEATURES = [
   {
     icon: "🔗",
-    titleKey: "landing.features.trpc.title",
-    descKey: "landing.features.trpc.desc",
+    titleKey: "features.trpc.title",
+    descKey: "features.trpc.desc",
   },
   {
     icon: "⚡",
-    titleKey: "landing.features.ssr.title",
-    descKey: "landing.features.ssr.desc",
+    titleKey: "features.ssr.title",
+    descKey: "features.ssr.desc",
   },
   {
     icon: "🗄️",
-    titleKey: "landing.features.db.title",
-    descKey: "landing.features.db.desc",
+    titleKey: "features.db.title",
+    descKey: "features.db.desc",
   },
   {
     icon: "🏗️",
-    titleKey: "landing.features.backend.title",
-    descKey: "landing.features.backend.desc",
+    titleKey: "features.backend.title",
+    descKey: "features.backend.desc",
   },
   {
     icon: "🎨",
-    titleKey: "landing.features.tailwind.title",
-    descKey: "landing.features.tailwind.desc",
+    titleKey: "features.tailwind.title",
+    descKey: "features.tailwind.desc",
   },
   {
     icon: "📦",
-    titleKey: "landing.features.workspace.title",
-    descKey: "landing.features.workspace.desc",
+    titleKey: "features.workspace.title",
+    descKey: "features.workspace.desc",
   },
 ] as const;
 

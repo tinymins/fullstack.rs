@@ -1,7 +1,7 @@
 const hero = {
   title: "フルスタック AI アプリスキャフォールド",
   subtitle:
-    "React + NestJS + tRPC + Drizzle によるモダンなフルスタックテンプレート、AI 時代のために構築",
+    "React + Hono + tRPC + Prisma によるモダンなフルスタックテンプレート、AI 時代のために構築",
   cta: "今すぐ始める",
   secondary: "ログイン",
   ctaGithub: "テンプレートをフォーク",

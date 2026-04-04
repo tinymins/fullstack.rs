@@ -10,12 +10,12 @@ const features = {
     desc: "伺服端渲染帶來更快的首屏載入和更好的 SEO 表現",
   },
   db: {
-    title: "Drizzle ORM",
+    title: "Prisma ORM",
     desc: "類型安全的資料庫操作，內建遷移管理和直觀的資料建模",
   },
   backend: {
-    title: "NestJS 後端框架",
-    desc: "企業級 Node.js 框架，模組化架構，依賴注入，開箱即用",
+    title: "Hono 後端框架",
+    desc: "輕量高效能 Web 框架，支援 Edge Runtime，極簡 API 設計",
   },
   tailwind: {
     title: "TailwindCSS 4",

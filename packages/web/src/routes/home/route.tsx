@@ -17,7 +17,7 @@ const META = {
   "zh-CN": {
     title: "AI Stack — AI 全栈应用模板",
     description:
-      "基于 TypeScript 的全栈应用模板。tRPC · React 19 · NestJS · Drizzle · PostgreSQL.",
+      "基于 TypeScript 的全栈应用模板。tRPC · React 19 · Hono · Prisma · PostgreSQL.",
     ogTitle: "AI Stack — AI 全栈应用模板",
     ogLocale: "zh_CN",
     ogLocaleAlt: "en_US",
@@ -25,7 +25,7 @@ const META = {
   en: {
     title: "AI Stack — AI Full-Stack Application Template",
     description:
-      "A full-stack application template built with TypeScript. tRPC · React 19 · NestJS · Drizzle · PostgreSQL.",
+      "A full-stack application template built with TypeScript. tRPC · React 19 · Hono · Prisma · PostgreSQL.",
     ogTitle: "AI Stack — AI Full-Stack Template",
     ogLocale: "en_US",
     ogLocaleAlt: "zh_CN",
@@ -40,7 +40,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     {
       name: "keywords",
       content:
-        "AI coding, full-stack template, tRPC, React, NestJS, Drizzle, TypeScript, boilerplate",
+        "AI coding, full-stack template, tRPC, React, Hono, Prisma, TypeScript, boilerplate",
     },
     // Open Graph
     { property: "og:type", content: "website" },

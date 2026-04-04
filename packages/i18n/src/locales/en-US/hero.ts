@@ -1,7 +1,7 @@
 const hero = {
   title: "Full-Stack AI App Scaffold",
   subtitle:
-    "Modern full-stack template powered by React + NestJS + tRPC + Drizzle, built for the AI era",
+    "Modern full-stack template powered by React + Hono + tRPC + Prisma, built for the AI era",
   cta: "Get Started",
   secondary: "Sign In",
   ctaGithub: "Fork Template",

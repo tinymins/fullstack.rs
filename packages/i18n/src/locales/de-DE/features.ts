@@ -11,11 +11,11 @@ const features = {
     desc: "Serverseitiges Rendering für schnellere Erstanzeige und bessere SEO-Leistung",
   },
   db: {
-    title: "Drizzle ORM",
+    title: "Prisma ORM",
     desc: "Typsichere Datenbankoperationen mit integrierter Migrationsverwaltung",
   },
   backend: {
-    title: "NestJS-Backend",
+    title: "Hono-Backend",
     desc: "Enterprise-Node.js-Framework mit modularer Architektur und Dependency Injection",
   },
   tailwind: {
