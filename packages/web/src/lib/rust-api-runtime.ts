@@ -164,11 +164,35 @@ export function createQuery<TInput, TOutput>(cfg: QueryRouteConfig<TInput>) {
         : [input: TInput, opts?: Partial<UseQueryOptions<TOutput>>]
     ) => {
       const [inputOrOpts, maybeOpts] = args as [unknown, unknown];
+      // Detect whether the first argument is React Query options (void input)
+      // or actual query input. Check if ALL keys belong to known RQ option names.
+      const RQ_OPTS = new Set([
+        "enabled",
+        "retry",
+        "retryDelay",
+        "staleTime",
+        "gcTime",
+        "refetchOnMount",
+        "refetchOnWindowFocus",
+        "refetchOnReconnect",
+        "refetchInterval",
+        "queryKey",
+        "select",
+        "placeholderData",
+        "initialData",
+        "meta",
+        "throwOnError",
+        "networkMode",
+        "notifyOnChangeProps",
+        "structuralSharing",
+      ]);
       const isVoidInput =
         inputOrOpts === undefined ||
         (typeof inputOrOpts === "object" &&
           inputOrOpts !== null &&
-          "queryKey" in inputOrOpts);
+          Object.keys(inputOrOpts as Record<string, unknown>).every((k) =>
+            RQ_OPTS.has(k),
+          ));
       const input = isVoidInput ? undefined : (inputOrOpts as TInput);
       const opts = (isVoidInput ? inputOrOpts : maybeOpts) as
         | Partial<UseQueryOptions<TOutput>>
