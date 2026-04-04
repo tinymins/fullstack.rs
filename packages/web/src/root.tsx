@@ -1,7 +1,6 @@
 import "./index.css";
 
-import { QueryClientProvider } from "@tanstack/react-query";
-import { httpBatchLink } from "@trpc/client";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 import { useEffect, useMemo } from "react";
 import { I18nextProvider } from "react-i18next";
@@ -14,16 +13,10 @@ import {
   useAuth,
   useLang,
   useTheme,
-  useTrpcQueryClient,
 } from "./hooks";
+import { type ErrorDisplay, ErrorDisplayContext } from "./lib/error-display";
 import i18n from "./lib/i18n";
-import { trpc } from "./lib/trpc";
-
-const getWorkspaceFromPath = () => {
-  if (typeof window === "undefined") return undefined;
-  const match = window.location.pathname.match(/^\/dashboard\/([^/]+)/);
-  return match?.[1];
-};
+import { message } from "./lib/message";
 
 /** Syncs the user's theme/lang preferences to global context after login */
 function ThemeLangSync() {
@@ -45,32 +38,27 @@ function ThemeLangSync() {
   return null;
 }
 
+const errorDisplay: ErrorDisplay = {
+  error: (msg) => message.error(msg),
+  success: (msg) => message.success(msg),
+  warning: (msg) => message.warning(msg),
+  info: (msg) => message.info(msg),
+};
+
 function Providers({ children }: { children: ReactNode }) {
-  const queryClient = useTrpcQueryClient();
-  const trpcClient = useMemo(
+  const queryClient = useMemo(
     () =>
-      trpc.createClient({
-        links: [
-          httpBatchLink({
-            url: import.meta.env.VITE_TRPC_URL || "/trpc",
-            fetch(url, options) {
-              return fetch(url, { ...options, credentials: "include" });
-            },
-            headers() {
-              const workspaceSlug = getWorkspaceFromPath();
-              return {
-                ...(workspaceSlug ? { "x-workspace-id": workspaceSlug } : {}),
-                "x-lang": i18n.resolvedLanguage ?? i18n.language ?? "zh-CN",
-              };
-            },
-          }),
-        ],
+      new QueryClient({
+        defaultOptions: {
+          queries: { retry: 1 },
+        },
       }),
     [],
   );
+
   return (
     <QueryClientProvider client={queryClient}>
-      <trpc.Provider client={trpcClient} queryClient={queryClient}>
+      <ErrorDisplayContext.Provider value={errorDisplay}>
         <I18nextProvider i18n={i18n}>
           <ThemeProvider>
             <LangProvider>
@@ -83,7 +71,7 @@ function Providers({ children }: { children: ReactNode }) {
             </LangProvider>
           </ThemeProvider>
         </I18nextProvider>
-      </trpc.Provider>
+      </ErrorDisplayContext.Provider>
     </QueryClientProvider>
   );
 }

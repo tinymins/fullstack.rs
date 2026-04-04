@@ -2,9 +2,9 @@ import { Avatar, Button, Input, Modal, Select } from "@acme/components";
 import type { User } from "@acme/types";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { userApi } from "@/generated/rust-api";
 import { useAvatarUpload } from "@/hooks/useAvatarUpload";
 import { message } from "@/lib/message";
-import { trpc } from "@/lib/trpc";
 
 interface ProfileSettingsModalProps {
   open: boolean;
@@ -42,7 +42,7 @@ export default function ProfileSettingsModal({
     }
   }, [open, user]);
 
-  const updateMutation = trpc.user.updateProfile.useMutation({
+  const updateMutation = userApi.updateProfile.useMutation({
     onSuccess: (updated) => {
       onUpdateUser(updated);
       message.success(t("userMenu.saveSuccess"));

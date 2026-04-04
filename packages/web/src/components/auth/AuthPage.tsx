@@ -3,8 +3,8 @@ import type { User } from "@acme/types";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router";
+import { authApi } from "@/generated/rust-api";
 import { useAuth } from "@/hooks";
-import { trpc } from "@/lib/trpc";
 
 type LoginPageProps = {
   initialMode?: "login" | "register";
@@ -15,8 +15,8 @@ export default function AuthPage({ initialMode = "login" }: LoginPageProps) {
   const { login, isAuthed, isLoading } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const loginMutation = trpc.auth.login.useMutation();
-  const registerMutation = trpc.auth.register.useMutation();
+  const loginMutation = authApi.login.useMutation();
+  const registerMutation = authApi.register.useMutation();
   const [mode, setMode] = useState<"login" | "register">(initialMode);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

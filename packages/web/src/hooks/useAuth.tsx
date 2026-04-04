@@ -1,8 +1,9 @@
 import type { User } from "@acme/types";
+import { useQueryClient } from "@tanstack/react-query";
 import type { ReactElement, ReactNode } from "react";
 import { createContext, useCallback, useContext } from "react";
 import { useNavigate } from "react-router";
-import { trpc } from "@/lib/trpc";
+import { authApi, userApi } from "@/generated/rust-api";
 
 type AuthState = {
   user: User | null;
@@ -28,10 +29,10 @@ export function AuthProvider({
   children: ReactNode;
 }): ReactElement {
   const navigate = useNavigate();
-  const utils = trpc.useUtils();
-  const logoutMutation = trpc.auth.logout.useMutation();
+  const queryClient = useQueryClient();
+  const logoutMutation = authApi.logout.useMutation();
 
-  const profileQuery = trpc.user.getProfile.useQuery(undefined, {
+  const profileQuery = userApi.getProfile.useQuery({
     retry: false,
   });
 
@@ -41,21 +42,23 @@ export function AuthProvider({
 
   const login = useCallback(
     (nextUser: User) => {
-      utils.user.getProfile.setData(undefined, nextUser);
+      userApi.getProfile.setData(queryClient, undefined, nextUser);
     },
-    [utils],
+    [queryClient],
   );
 
   const updateUser = login;
 
   const logout = useCallback(async () => {
     try {
-      await logoutMutation.mutateAsync();
+      await logoutMutation.mutateAsync(undefined as never);
     } finally {
-      utils.user.getProfile.reset();
+      queryClient.resetQueries({
+        queryKey: userApi.getProfile.queryKey(),
+      });
       navigate("/");
     }
-  }, [logoutMutation, utils, navigate]);
+  }, [logoutMutation, queryClient, navigate]);
 
   return (
     <AuthContext.Provider

@@ -10,13 +10,13 @@ YELLOW='\033[0;33m'
 DIM='\033[2m'
 NC='\033[0m'
 
-PORTS=(4000 5173 5174)
+PORTS=(5173 5174 5678)
 
 PROCESS_PATTERNS=(
+  "apps-server"
+  "watchexec.*rust-server"
   "turbo dev"
-  "tsx watch"
   "vite"
-  "node.*server"
 )
 
 killed=0

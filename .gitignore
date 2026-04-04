@@ -63,6 +63,11 @@ packages/server/src/**/*.d.ts.map
 # Prisma generated client
 packages/server/src/generated/
 
+# Rust
+target/
+*.wasm
+packages/acme-wasm/pkg/
+
 # Turborepo cache
 .turbo
 

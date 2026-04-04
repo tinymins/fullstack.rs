@@ -1,9 +1,10 @@
 import { Button, Input, Modal } from "@acme/components";
 import { slugify } from "@acme/types";
+import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { workspaceApi } from "@/generated/rust-api";
 import { message } from "@/lib/message";
-import { trpc } from "@/lib/trpc";
 
 interface CreateWorkspaceModalProps {
   open: boolean;
@@ -21,12 +22,12 @@ export default function CreateWorkspaceModal({
   const [slug, setSlug] = useState("");
   const [slugEdited, setSlugEdited] = useState(false);
   const [description, setDescription] = useState("");
-  const utils = trpc.useUtils();
+  const queryClient = useQueryClient();
 
-  const createMutation = trpc.workspace.create.useMutation({
+  const createMutation = workspaceApi.create.useMutation({
     onSuccess: async (data) => {
       message.success(t("workspace.createSuccess"));
-      await utils.workspace.list.invalidate();
+      await workspaceApi.list.invalidate(queryClient);
       reset();
       onSuccess?.(data);
     },

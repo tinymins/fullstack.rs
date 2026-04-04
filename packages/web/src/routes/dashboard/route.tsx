@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import type { LoaderFunctionArgs, MetaFunction } from "react-router";
 import { Outlet, useNavigate, useNavigation } from "react-router";
 import { WorkspaceRedirectSkeleton } from "@/components/skeleton";
+import { workspaceApi } from "@/generated/rust-api";
 import { useAuth, WorkspaceListContext } from "@/hooks";
-import { trpc } from "@/lib/trpc";
 
 function parseLang(cookieHeader: string): "zh-CN" | "en" {
   const m = cookieHeader.match(/(?:^|;\s*)i18next=([^;]*)/);
@@ -25,7 +25,7 @@ export default function DashboardRoot() {
   const { user, isLoading } = useAuth();
   const navigate = useNavigate();
   const navigation = useNavigation();
-  const workspacesQuery = trpc.workspace.list.useQuery(undefined, {
+  const workspacesQuery = workspaceApi.list.useQuery({
     enabled: !!user,
   });
 

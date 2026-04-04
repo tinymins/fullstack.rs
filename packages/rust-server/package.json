@@ -1,0 +1,9 @@
+{
+  "name": "@acme/rust-server",
+  "private": true,
+  "scripts": {
+    "dev": "bash ./dev-watch.sh",
+    "build": "cargo build",
+    "typecheck": "cargo check"
+  }
+}

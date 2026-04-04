@@ -2,11 +2,23 @@
 
 本文档描述如何从零开始将应用部署到服务器。
 
+## 架构概览
+
+生产环境仅包含 **2 个容器**：
+
+| 容器 | 镜像 | 说明 |
+|------|------|------|
+| `apps-postgres` | `postgres:18` | PostgreSQL 数据库 |
+| `apps-server` | `apps-server:latest` | Rust 后端 + 内嵌前端静态文件 |
+
+Server 二进制为 `apps-server`，监听端口 **5678**，通过 Docker 映射到宿主机 `WEB_PORT`（默认 8080）。
+
 ## 前置要求
 
 ### 本地环境
 - Node.js >= 20.19 或 >= 22.12
 - pnpm >= 10.15.1
+- Rust toolchain（见 `rust-toolchain.toml`）
 - Docker
 
 ### 服务器环境
@@ -20,24 +32,21 @@
 ```bash
 cd /path/to/project
 
-# 构建 server、migrate、web 镜像
+# 构建 Rust 二进制 + Docker 镜像（含前端静态文件）
 make docker
 ```
 
-构建完成后会生成三个镜像：
-- `apps-server:latest` — 后端 API 服务
-- `apps-server-migrate:latest` — 数据库迁移（一次性容器）
-- `apps-web:latest` — 前端服务
+构建完成后生成一个镜像：
+- `apps-server:latest` — Rust 后端（内嵌前端静态文件）
 
 ### 2. 导出并上传镜像
 
 ```bash
 # 导出镜像为 tar 文件
-docker save apps-server:latest apps-server-migrate:latest apps-web:latest \
-  -o apps-docker-images.tar
+docker save apps-server:latest -o apps-docker-images.tar
 
 # 上传到服务器
-scp apps-docker-images.tar <server>:/tmp/
+scp apps-docker-images.tar <server>:/path/to/tmp/
 ```
 
 ### 3. 服务器端准备
@@ -49,10 +58,10 @@ SSH 登录服务器后执行：
 mkdir -p /mnt/docker/apps
 
 # 加载 Docker 镜像
-docker load -i /tmp/apps-docker-images.tar
+docker load -i /path/to/tmp/apps-docker-images.tar
 
 # 清理临时文件
-rm /tmp/apps-docker-images.tar
+rm /path/to/tmp/apps-docker-images.tar
 ```
 
 ### 4. 上传配置文件
@@ -82,17 +91,8 @@ POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
 POSTGRES_DB=apps_db
 
-MINIO_ROOT_USER=minioadmin
-MINIO_ROOT_PASSWORD=minioadmin
-
-# 前端端口
+# 前端端口（宿主机映射到 server:5678）
 WEB_PORT=8080
-
-# 暴露后端/数据库端口到宿主机（可选，取消注释启用）
-# COMPOSE_FILE=docker-compose.yml:docker-compose.debug.yml
-# SERVER_PORT=4000
-# DB_PORT=5432
-# REDIS_PORT=6379
 ```
 
 ### 6. 启动服务
@@ -103,15 +103,16 @@ ssh <server> "cd /mnt/docker/apps && docker compose up -d"
 
 等待所有容器启动：
 - `apps-postgres` — PostgreSQL 数据库
-- `apps-redis` — Redis 缓存
-- `apps-minio` — MinIO 对象存储
-- `apps-db-migrate` — 数据库迁移（运行后自动退出）
-- `apps-server` — Node.js 后端
-- `apps-web` — React 前端
+- `apps-server` — Rust 后端（内嵌前端）
 
 ### 7. 初始化数据库（首次部署）
 
-首次部署时，数据库迁移由 `db-migrate` 容器自动完成。
+首次部署时需同步数据库 schema：
+
+```bash
+ssh <server> "docker exec apps-server npx prisma db push"
+```
+
 如需手动执行种子数据：
 
 ```bash
@@ -134,10 +135,8 @@ ssh <server> "cd /mnt/docker/apps && docker compose logs --tail=50 server"
 
 | 服务 | 默认端口 | 环境变量 | 说明 |
 |------|---------|---------|------|
-| 前端 | 8080 | `WEB_PORT` | React 应用 |
-| 后端 | 不暴露 | `SERVER_PORT` | 需启用 debug 叠加文件 |
+| 前端+后端 | 8080 | `WEB_PORT` | Rust 服务（内嵌前端） |
 | 数据库 | 不暴露 | `DB_PORT` | 需启用 debug 叠加文件 |
-| Redis | 不暴露 | `REDIS_PORT` | 需启用 debug 叠加文件 |
 
 > **注意**: 如端口被占用，修改 `.env` 文件中对应的端口变量即可。
 
@@ -159,13 +158,12 @@ ssh <server> "cd /mnt/docker/apps && docker compose logs --tail=50 server"
 make docker
 
 # 2. 导出并上传
-docker save apps-server:latest apps-server-migrate:latest apps-web:latest \
-  -o apps-docker-images.tar
-scp apps-docker-images.tar <server>:/tmp/
+docker save apps-server:latest -o apps-docker-images.tar
+scp apps-docker-images.tar <server>:/path/to/tmp/
 
 # 3. 服务器加载新镜像并重启
-ssh <server> "docker load -i /tmp/apps-docker-images.tar && \
-  rm /tmp/apps-docker-images.tar && \
+ssh <server> "docker load -i /path/to/tmp/apps-docker-images.tar && \
+  rm /path/to/tmp/apps-docker-images.tar && \
   cd /mnt/docker/apps && \
   docker compose up -d"
 ```
@@ -180,6 +178,7 @@ ssh <server> "cd /mnt/docker/apps && \
   rm -rf data && \
   docker compose up -d && \
   sleep 10 && \
+  docker exec apps-server npx prisma db push && \
   docker exec apps-server node dist/seed.js"
 ```
 
@@ -187,28 +186,23 @@ ssh <server> "cd /mnt/docker/apps && \
 
 ### 端口被占用
 
-如果前端默认端口被占用，修改 `.env` 文件中的端口变量：
+如果默认端口被占用，修改 `.env` 文件中的端口变量：
 
 ```env
-# 前端端口
+# 前端+后端端口
 WEB_PORT=8180
 ```
 
-### 暴露后端/数据库端口（可选）
+### 暴露数据库端口（可选）
 
-默认仅前端暴露端口到宿主机，后端和数据库通过 Docker 内网通信（更安全）。
-前端自动代理 API 请求到后端，无需额外暴露。
+默认仅暴露前端+后端端口到宿主机，数据库通过 Docker 内网通信（更安全）。
 
-如需直接访问后端 API 或用数据库工具（DBeaver、pgAdmin）连接调试，在 `.env` 中添加：
+如需用数据库工具（DBeaver、pgAdmin）连接调试，在 `.env` 中添加：
 
 ```env
 COMPOSE_FILE=docker-compose.yml:docker-compose.debug.yml
-SERVER_PORT=4000
 DB_PORT=5432
-REDIS_PORT=6379
 ```
-
-> 可以只暴露其中一个，不需要的端口变量不设置即可（叠加文件中有默认值）。
 
 ### 查看实时日志
 

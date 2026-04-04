@@ -5,9 +5,8 @@
   "scripts": {
     "dev": "turbo run dev",
     "dev:web": "turbo run dev --filter @acme/web",
-    "dev:server": "turbo run dev --filter @acme/server",
     "dev:miniapp": "turbo run dev --filter @acme/miniapp",
-    "build": "turbo run build --filter @acme/server --filter @acme/web",
+    "build": "turbo run build --filter @acme/web",
     "build:miniapp": "turbo run build --filter @acme/miniapp",
     "lint": "biome check .",
     "format": "biome format . --write",
@@ -15,7 +14,8 @@
     "check": "pnpm lint && pnpm typecheck",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
-    "db:migrate": "pnpm -C packages/server db:migrate"
+    "db:push": "npx prisma db push --schema prisma/schema.prisma",
+    "db:generate": "npx prisma generate --schema prisma/schema.prisma"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.6",

@@ -59,9 +59,13 @@ set +a
 
 echo -e "${GREEN}🚀 启动开发环境...${NC}"
 DATA_DIR="${DATA_LOCAL_PATH:-.data}"
-mkdir -p "$DATA_DIR/postgres" "$DATA_DIR/redis" "$DATA_DIR/minio"
+mkdir -p "$DATA_DIR/postgres" "$DATA_DIR/storage"
 docker compose -f docker/docker-compose.dev.yml --env-file .env up -d
-echo -e "${GREEN}✓ 数据库、Redis、MinIO 已启动${NC}"
+echo -e "${GREEN}✓ 数据库已启动${NC}"
+
+# 生成 Rust → TypeScript 类型
+echo -e "${YELLOW}🦀 生成 TypeScript 类型...${NC}"
+node scripts/gen-rust-api.mjs 2>/dev/null || echo -e "${YELLOW}⚠ TypeScript 类型生成跳过${NC}"
 
 echo -e "${YELLOW}启动开发服务器 (Ctrl+C 停止并自动关闭服务)...${NC}"
 

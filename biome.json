@@ -37,6 +37,7 @@
     "includes": [
       "**",
       "!**/dist",
+      "!**/target",
       "!**/node_modules",
       "!.data",
       "!.turbo",

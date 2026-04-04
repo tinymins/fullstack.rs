@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => {
     "SERVER_PORT",
     "WEB_PORT",
     "VITE_",
+    "RUST_",
   ]);
 
   const serverPort = Number(env.SERVER_PORT) || 4000;
@@ -15,6 +16,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [reactRouter(), tailwindcss()],
+    envPrefix: ["VITE_", "RUST_"],
     resolve: {
       tsconfigPaths: true,
       alias: {
@@ -25,11 +27,15 @@ export default defineConfig(({ mode }) => {
       host: "0.0.0.0",
       port: webPort,
       proxy: {
-        "/trpc": {
+        "/api": {
           target: `http://localhost:${serverPort}`,
           changeOrigin: true,
         },
         "/upload": {
+          target: `http://localhost:${serverPort}`,
+          changeOrigin: true,
+        },
+        "/storage": {
           target: `http://localhost:${serverPort}`,
           changeOrigin: true,
         },

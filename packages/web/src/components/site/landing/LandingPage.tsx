@@ -2,9 +2,9 @@ import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { UserMenu } from "@/components/account";
+import { userApi } from "@/generated/rust-api";
 import { useAuth, useLang, useTheme } from "@/hooks";
 import type { Lang } from "@/lib/preferences";
-import { trpc } from "@/lib/trpc";
 
 function SunIcon() {
   return (
@@ -92,7 +92,7 @@ export default function LandingPage() {
   const { user, isAuthed, updateUser, logout } = useAuth();
   const { lang, setLangMode } = useLang();
 
-  const updateProfile = trpc.user.updateProfile.useMutation({
+  const updateProfile = userApi.updateProfile.useMutation({
     onSuccess: updateUser,
   });
 

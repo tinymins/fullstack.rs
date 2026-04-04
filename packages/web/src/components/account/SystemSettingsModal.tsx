@@ -1,10 +1,10 @@
 import { Button, Input, Modal, Select } from "@acme/components";
 import type { AdminUser, InvitationCode, User, UserRole } from "@acme/types";
-import { TRPCClientError } from "@trpc/client";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { adminApi } from "@/generated/rust-api";
 import { message } from "@/lib/message";
-import { trpc } from "@/lib/trpc";
+import { RustApiError } from "@/lib/rust-api-runtime";
 
 type SystemSettingsModalProps = {
   open: boolean;
@@ -98,27 +98,25 @@ export default function SystemSettingsModal({
   const { t } = useTranslation();
   const isSuperAdmin = user.role === "superadmin";
 
-  const settingsQuery = trpc.admin.getSystemSettings.useQuery(undefined, {
+  const settingsQuery = adminApi.getSystemSettings.useQuery({
     enabled: open,
   });
-  const updateSettingsMutation = trpc.admin.updateSystemSettings.useMutation();
+  const updateSettingsMutation = adminApi.updateSystemSettings.useMutation();
 
-  const usersQuery = trpc.admin.listUsers.useQuery(undefined, {
+  const usersQuery = adminApi.listUsers.useQuery({
     enabled: open && isSuperAdmin,
   });
-  const updateRoleMutation = trpc.admin.updateUserRole.useMutation();
-  const forceResetPasswordMutation =
-    trpc.admin.forceResetPassword.useMutation();
-  const deleteUserMutation = trpc.admin.deleteUser.useMutation();
-  const createUserMutation = trpc.admin.createUser.useMutation();
+  const updateRoleMutation = adminApi.updateUserRole.useMutation();
+  const forceResetPasswordMutation = adminApi.forceResetPassword.useMutation();
+  const deleteUserMutation = adminApi.deleteUser.useMutation();
+  const createUserMutation = adminApi.createUser.useMutation();
 
-  const invitationsQuery = trpc.admin.listInvitationCodes.useQuery(undefined, {
+  const invitationsQuery = adminApi.listInvitationCodes.useQuery({
     enabled: open && isSuperAdmin,
   });
   const generateInvitationMutation =
-    trpc.admin.generateInvitationCode.useMutation();
-  const deleteInvitationMutation =
-    trpc.admin.deleteInvitationCode.useMutation();
+    adminApi.generateInvitationCode.useMutation();
+  const deleteInvitationMutation = adminApi.deleteInvitationCode.useMutation();
 
   const [activeTab, setActiveTab] = useState("general");
 
@@ -201,7 +199,7 @@ export default function SystemSettingsModal({
       usersQuery.refetch();
       message.success(t("systemSettings.addUserSuccess"));
     } catch (error: unknown) {
-      if (error instanceof TRPCClientError && error.data?.code === "CONFLICT") {
+      if (error instanceof RustApiError && error.status === 409) {
         message.error(t("systemSettings.emailExists"));
       } else {
         throw error;
@@ -229,7 +227,7 @@ export default function SystemSettingsModal({
   };
 
   const handleDeleteInvitation = async (codeId: string) => {
-    await deleteInvitationMutation.mutateAsync({ codeId });
+    await deleteInvitationMutation.mutateAsync({ code: codeId });
     invitationsQuery.refetch();
     setConfirmDeleteInvitation(null);
     message.success(t("systemSettings.invitationDeleted"));

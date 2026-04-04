@@ -1,9 +1,9 @@
 import type { User } from "@acme/types";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { userApi } from "@/generated/rust-api";
 import { resolveAvatarUrl } from "@/lib/avatar";
 import { message } from "@/lib/message";
-import { trpc } from "@/lib/trpc";
 
 /**
  * Encapsulates avatar upload / delete state and handlers.
@@ -21,7 +21,7 @@ export function useAvatarUpload(
   const [avatarKey, setAvatarKey] = useState(user.settings?.avatarKey ?? "");
   const [uploading, setUploading] = useState(false);
 
-  const deleteMutation = trpc.user.deleteAvatar.useMutation({
+  const deleteMutation = userApi.deleteAvatar.useMutation({
     onSuccess: (updated) => {
       setAvatarKey("");
       onUpdateUser(updated);
