@@ -28,14 +28,15 @@ const detectSystemTheme = (): Theme => {
   }
 };
 
-const detectLang = (mode: LangMode): "zh" | "en" => {
-  if (mode === "zh" || mode === "en") return mode;
+const detectLang = (mode: LangMode): "zh-CN" | "en-US" => {
+  if (mode === "zh") return "zh-CN";
+  if (mode === "en") return "en-US";
   try {
     const info = Taro.getAppBaseInfo();
     const lang = info.language ?? "zh";
-    return lang.toLowerCase().startsWith("zh") ? "zh" : "en";
+    return lang.toLowerCase().startsWith("zh") ? "zh-CN" : "en-US";
   } catch {
-    return "zh";
+    return "zh-CN";
   }
 };
 

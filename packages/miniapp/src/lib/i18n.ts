@@ -1,31 +1,29 @@
-import { en, zh } from "@acme/i18n";
+import { enUS, zhCN } from "@acme/i18n";
 import Taro from "@tarojs/taro";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
 const resources = {
-  zh: zh,
-  en: en,
+  "zh-CN": zhCN,
+  "en-US": enUS,
 } as const;
 
 const detectLang = (): string => {
   try {
     const stored = Taro.getStorageSync("miniapp_lang_mode");
-    if (stored === "zh" || stored === "en") return stored;
-    // getAppBaseInfo() is the recommended replacement for the deprecated
-    // getSystemInfoSync() — safe to call at module init time
+    if (stored === "zh-CN" || stored === "en-US") return stored;
     const appInfo = Taro.getAppBaseInfo();
-    const lang = appInfo.language ?? "zh";
-    return lang.toLowerCase().startsWith("zh") ? "zh" : "en";
+    const lang = appInfo.language ?? "zh-CN";
+    return lang.toLowerCase().startsWith("zh") ? "zh-CN" : "en-US";
   } catch {
-    return "zh";
+    return "zh-CN";
   }
 };
 
 i18n.use(initReactI18next).init({
   resources,
   lng: detectLang(),
-  fallbackLng: "zh",
+  fallbackLng: "zh-CN",
   interpolation: {
     escapeValue: false,
   },
