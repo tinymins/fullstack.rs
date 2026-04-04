@@ -1,4 +1,5 @@
 pub mod build_info;
+pub mod db;
 pub mod error;
 pub mod handlers;
 pub mod logging;

@@ -5,11 +5,17 @@ use tower_http::services::{ServeDir, ServeFile};
 use crate::middleware::request_timeout;
 use crate::AppState;
 
+mod auth;
 mod cors;
 mod storage;
+mod user;
+mod workspace;
 
 pub fn build_app(state: Arc<AppState>) -> Router {
     let api = Router::new()
+        .merge(auth::build_auth_routes())
+        .merge(user::build_user_routes())
+        .merge(workspace::build_workspace_routes())
         .merge(storage::build_storage_routes())
         .layer(cors::build_cors_layer())
         .layer(middleware::from_fn(request_timeout))
