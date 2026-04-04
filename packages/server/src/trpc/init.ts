@@ -7,7 +7,7 @@ import { AppError } from "./errors";
 const t = initTRPC.context<Context>().create({
   errorFormatter({ shape, error, ctx }) {
     if (error.cause instanceof ZodError) {
-      const language = ctx?.language ?? "zh";
+      const language = ctx?.language ?? "zh-CN";
       return {
         ...shape,
         // ZodError.issues is a discriminated union; cast to access common fields

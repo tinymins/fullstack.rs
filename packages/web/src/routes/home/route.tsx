@@ -3,9 +3,9 @@ import LandingPage from "@/components/site/landing/LandingPage";
 
 const SITE_URL = import.meta.env.VITE_SITE_URL ?? "https://localhost:5173";
 
-function parseLang(cookieHeader: string): "zh" | "en" {
+function parseLang(cookieHeader: string): "zh-CN" | "en" {
   const match = cookieHeader.match(/(?:^|;\s*)i18next=([^;]+)/);
-  return match?.[1] === "en" ? "en" : "zh";
+  return match?.[1] === "en" ? "en" : "zh-CN";
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -14,7 +14,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 const META = {
-  zh: {
+  "zh-CN": {
     title: "AI Stack — AI 全栈应用模板",
     description:
       "基于 TypeScript 的全栈应用模板。tRPC · React 19 · NestJS · Drizzle · PostgreSQL.",
@@ -33,7 +33,7 @@ const META = {
 } as const;
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  const m = META[data?.lang ?? "zh"];
+  const m = META[data?.lang ?? "zh-CN"];
   return [
     { title: m.title },
     { name: "description", content: m.description },

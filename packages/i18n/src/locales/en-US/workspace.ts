@@ -1,0 +1,25 @@
+const workspace = {
+  workspaces: "Workspaces",
+  select: "Select workspace",
+  new: "New workspace",
+  createSuccess: "Workspace created successfully",
+  createFailed: "Failed to create",
+  name: "Name",
+  namePlaceholder: "My workspace",
+  description: "Description (optional)",
+  create: "Create",
+  slugLabel: "Slug",
+  slugPlaceholder: "my-workspace",
+  placeholder: "Overview",
+  currentWorkspace: "Workspace",
+  userLabel: "User",
+  welcomeBack: "Welcome back, {{name}}",
+  defaultNameSuffix: "'s workspace",
+  defaultDesc: "Default workspace",
+  loadError: "Failed to load workspaces",
+  retryLater: "Please try again later",
+  empty: "No workspaces yet",
+  createFirst: "Please create a workspace first",
+};
+
+export default workspace;

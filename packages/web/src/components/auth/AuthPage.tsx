@@ -66,13 +66,13 @@ export default function AuthPage({ initialMode = "login" }: LoginPageProps) {
       <div className="w-full max-w-sm z-10">
         <div className="glass glass-accent p-8">
           <h1 className="text-xl font-semibold mb-6 text-[var(--text-primary)]">
-            {mode === "login" ? t("auth.login") : t("auth.register")}
+            {mode === "login" ? t("login.login") : t("login.register")}
           </h1>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-[var(--text-primary)] mb-1">
-                {t("user.email")}
+                {t("login.email")}
               </label>
               <Input
                 type="email"
@@ -84,7 +84,7 @@ export default function AuthPage({ initialMode = "login" }: LoginPageProps) {
             </div>
             <div>
               <label className="block text-sm font-medium text-[var(--text-primary)] mb-1">
-                {t("auth.password")}
+                {t("login.password")}
               </label>
               <Input
                 type="password"
@@ -106,7 +106,7 @@ export default function AuthPage({ initialMode = "login" }: LoginPageProps) {
             )}
 
             <Button type="submit" block loading={isPending} className="mt-1">
-              {mode === "login" ? t("auth.login") : t("auth.register")}
+              {mode === "login" ? t("login.login") : t("login.register")}
             </Button>
 
             <button
@@ -115,8 +115,8 @@ export default function AuthPage({ initialMode = "login" }: LoginPageProps) {
               className="cursor-pointer w-full text-sm hover:underline text-[var(--text-muted)]"
             >
               {mode === "login"
-                ? t("auth.noAccountRegister")
-                : t("auth.haveAccountLogin")}
+                ? t("login.noAccountRegister")
+                : t("login.haveAccountLogin")}
             </button>
           </form>
         </div>

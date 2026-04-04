@@ -49,9 +49,11 @@ export type {
   Theme,
   ThemeMode,
   User,
+  UserRole,
   UserSettings,
 } from "./user";
 export {
+  UserRoleSchema,
   UserSchema,
   UserSettingsPatchSchema,
   UserSettingsSchema,

@@ -5,8 +5,9 @@ import { WorkspaceRedirectSkeleton } from "@/components/skeleton";
 import { useAuth, WorkspaceListContext } from "@/hooks";
 import { trpc } from "@/lib/trpc";
 
-function parseLang(cookieHeader: string): "zh" | "en" {
-  return /(?:^|;\s*)i18next=en/.test(cookieHeader) ? "en" : "zh";
+function parseLang(cookieHeader: string): "zh-CN" | "en" {
+  const m = cookieHeader.match(/(?:^|;\s*)i18next=([^;]*)/);
+  return m?.[1] === "en" ? "en" : "zh-CN";
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {

@@ -21,20 +21,29 @@ type LangContextValue = {
 };
 
 const LangContext = createContext<LangContextValue>({
-  lang: "zh",
+  lang: "zh-CN",
   langMode: "auto",
   setLangMode: () => {},
 });
 
-const normalizeLang = (value?: string): Lang =>
-  value?.toLowerCase().startsWith("zh") ? "zh" : "en";
+const normalizeLang = (value?: string): Lang => {
+  if (!value) return "zh-CN";
+  const lower = value.toLowerCase();
+  if (lower.startsWith("en")) return "en-US";
+  if (lower.startsWith("de")) return "de-DE";
+  if (lower.startsWith("ja")) return "ja-JP";
+  if (lower === "zh-tw" || lower === "zh_tw" || lower === "zh-hant")
+    return "zh-TW";
+  if (lower.startsWith("zh")) return "zh-CN";
+  return "zh-CN";
+};
 
 const detectBrowserLang = (): Lang => {
   if (typeof navigator !== "undefined") {
     const browserLang = navigator.languages?.[0] ?? navigator.language;
     return normalizeLang(browserLang);
   }
-  return "zh";
+  return "zh-CN";
 };
 
 export function LangProvider({ children }: { children: ReactNode }) {
@@ -48,7 +57,7 @@ export function LangProvider({ children }: { children: ReactNode }) {
 
   // After hydration: cookie → browser auto-detect.
   useEffect(() => {
-    const savedMode = loadLangMode(); // "zh" | "en" | "auto"
+    const savedMode = loadLangMode(); // LangMode
     const resolvedLang = savedMode === "auto" ? detectBrowserLang() : savedMode;
     setLangModeState(savedMode);
     if (i18nRef.current.language !== resolvedLang) {

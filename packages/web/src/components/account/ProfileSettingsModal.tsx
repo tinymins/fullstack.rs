@@ -22,9 +22,9 @@ export default function ProfileSettingsModal({
   const { t } = useTranslation();
   const [name, setName] = useState(user.name ?? "");
   const [email, setEmail] = useState(user.email ?? "");
-  const [langMode, setLangMode] = useState<"auto" | "zh" | "en">(
-    user.settings?.langMode ?? "auto",
-  );
+  const [langMode, setLangMode] = useState<
+    "auto" | "zh-CN" | "en-US" | "de-DE" | "ja-JP" | "zh-TW"
+  >(user.settings?.langMode ?? "auto");
   const [themeMode, setThemeMode] = useState<"auto" | "light" | "dark">(
     user.settings?.themeMode ?? "auto",
   );
@@ -45,11 +45,11 @@ export default function ProfileSettingsModal({
   const updateMutation = trpc.user.updateProfile.useMutation({
     onSuccess: (updated) => {
       onUpdateUser(updated);
-      message.success(t("user.saveSuccess"));
+      message.success(t("userMenu.saveSuccess"));
       onClose();
     },
     onError: (err) => {
-      message.error(err.message || t("user.saveFailed"));
+      message.error(err.message || t("userMenu.saveFailed"));
     },
   });
 
@@ -66,7 +66,7 @@ export default function ProfileSettingsModal({
     <Modal
       open={open}
       onCancel={onClose}
-      title={t("user.profileSettings")}
+      title={t("userMenu.profileSettings")}
       footer={null}
     >
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -110,7 +110,7 @@ export default function ProfileSettingsModal({
 
         <div>
           <label className="block text-sm font-medium text-[var(--text-primary)] mb-1">
-            {t("user.name")}
+            {t("userMenu.name")}
           </label>
           <Input
             value={name}
@@ -121,7 +121,7 @@ export default function ProfileSettingsModal({
 
         <div>
           <label className="block text-sm font-medium text-[var(--text-primary)] mb-1">
-            {t("user.email")}
+            {t("userMenu.email")}
           </label>
           <Input
             type="email"
@@ -137,11 +137,18 @@ export default function ProfileSettingsModal({
           </label>
           <Select
             value={langMode}
-            onChange={(val) => setLangMode(val as "auto" | "zh" | "en")}
+            onChange={(val) =>
+              setLangMode(
+                val as "auto" | "zh-CN" | "en-US" | "de-DE" | "ja-JP" | "zh-TW",
+              )
+            }
             options={[
               { value: "auto", label: t("common.followSystem") },
-              { value: "zh", label: t("common.langZh") },
-              { value: "en", label: t("common.langEn") },
+              { value: "zh-CN", label: t("common.lang.zhCN") },
+              { value: "en-US", label: t("common.lang.enUS") },
+              { value: "de-DE", label: t("common.lang.deDE") },
+              { value: "ja-JP", label: t("common.lang.jaJP") },
+              { value: "zh-TW", label: t("common.lang.zhTW") },
             ]}
           />
         </div>

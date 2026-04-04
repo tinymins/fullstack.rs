@@ -1,0 +1,25 @@
+const workspace = {
+  workspaces: "ワークスペース",
+  select: "ワークスペースを選択",
+  new: "新規ワークスペース",
+  createSuccess: "ワークスペースの作成に成功しました",
+  createFailed: "作成に失敗しました",
+  name: "名前",
+  namePlaceholder: "マイワークスペース",
+  description: "説明（任意）",
+  create: "作成",
+  slugLabel: "スラッグ",
+  slugPlaceholder: "my-workspace",
+  placeholder: "概要",
+  currentWorkspace: "ワークスペース",
+  userLabel: "ユーザー",
+  welcomeBack: "おかえりなさい、{{name}}",
+  defaultNameSuffix: "のワークスペース",
+  defaultDesc: "デフォルトワークスペース",
+  loadError: "ワークスペースの読み込みに失敗しました",
+  retryLater: "しばらくしてから再試行してください",
+  empty: "ワークスペースがありません",
+  createFirst: "まずワークスペースを作成してください",
+};
+
+export default workspace;

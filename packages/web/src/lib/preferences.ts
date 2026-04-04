@@ -58,8 +58,16 @@ export const saveThemeMode = (mode: ThemeMode) => {
 
 export const loadLangMode = (): LangMode => {
   const savedMode = getCookieValue(LANG_MODE_COOKIE_KEY);
-  if (savedMode === "auto" || savedMode === "zh" || savedMode === "en") {
-    return savedMode;
+  const validModes: string[] = [
+    "auto",
+    "zh-CN",
+    "en-US",
+    "de-DE",
+    "ja-JP",
+    "zh-TW",
+  ];
+  if (savedMode && validModes.includes(savedMode)) {
+    return savedMode as LangMode;
   }
   return "auto";
 };

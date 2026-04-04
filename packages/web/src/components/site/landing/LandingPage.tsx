@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { UserMenu } from "@/components/account";
 import { useAuth, useLang, useTheme } from "@/hooks";
+import type { Lang } from "@/lib/preferences";
 import { trpc } from "@/lib/trpc";
 
 function SunIcon() {
@@ -108,8 +109,18 @@ export default function LandingPage() {
     }
   };
 
+  const langCycle: Lang[] = ["zh-CN", "en-US", "de-DE", "ja-JP", "zh-TW"];
+  const langLabels: Record<Lang, string> = {
+    "zh-CN": "简中",
+    "en-US": "EN",
+    "de-DE": "DE",
+    "ja-JP": "日本",
+    "zh-TW": "繁中",
+  };
+
   const toggleLang = () => {
-    const newMode = lang === "zh" ? "en" : "zh";
+    const idx = langCycle.indexOf(lang);
+    const newMode = langCycle[(idx + 1) % langCycle.length];
     setLangMode(newMode);
     if (isAuthed) {
       updateProfile.mutate({ settings: { langMode: newMode } });
@@ -150,7 +161,15 @@ export default function LandingPage() {
                 title={t("common.language")}
               >
                 <GlobeIcon />
-                <span>{lang === "zh" ? "EN" : "中"}</span>
+                <span>
+                  {
+                    langLabels[
+                      langCycle[
+                        (langCycle.indexOf(lang) + 1) % langCycle.length
+                      ]
+                    ]
+                  }
+                </span>
               </button>
 
               <button
@@ -168,7 +187,7 @@ export default function LandingPage() {
                     to="/dashboard"
                     className="hidden sm:flex items-center px-4 py-1.5 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-lg shadow-sm transition-all"
                   >
-                    {t("landing.nav.dashboard")}
+                    {t("nav.dashboard")}
                   </Link>
                   <UserMenu
                     user={user}
@@ -182,7 +201,7 @@ export default function LandingPage() {
                   to="/login"
                   className="hidden sm:flex items-center px-4 py-1.5 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-lg shadow-sm transition-all"
                 >
-                  {t("landing.nav.getStarted")}
+                  {t("nav.getStarted")}
                 </Link>
               )}
             </div>
@@ -201,24 +220,24 @@ export default function LandingPage() {
           >
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight">
               <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">
-                {t("landing.hero.title")}
+                {t("hero.title")}
               </span>
             </h1>
             <p className="mt-6 text-lg sm:text-xl text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto leading-relaxed">
-              {t("landing.hero.subtitle")}
+              {t("hero.subtitle")}
             </p>
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
                 to={user ? "/dashboard" : "/register"}
                 className="px-8 py-3 text-base font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl shadow-lg shadow-blue-500/25 transition-all"
               >
-                {t("landing.hero.cta")}
+                {t("hero.cta")}
               </Link>
               <Link
                 to="/login"
                 className="px-8 py-3 text-base font-semibold text-zinc-700 dark:text-zinc-300 border border-zinc-300 dark:border-zinc-700 hover:border-zinc-400 dark:hover:border-zinc-600 rounded-xl transition-all"
               >
-                {t("landing.hero.secondary")}
+                {t("hero.secondary")}
               </Link>
             </div>
           </motion.div>
@@ -236,10 +255,10 @@ export default function LandingPage() {
             className="text-center mb-16"
           >
             <h2 className="text-3xl sm:text-4xl font-bold">
-              {t("landing.features.heading")}
+              {t("features.heading")}
             </h2>
             <p className="mt-4 text-zinc-600 dark:text-zinc-400 max-w-xl mx-auto">
-              {t("landing.features.subheading")}
+              {t("features.subheading")}
             </p>
           </motion.div>
 
@@ -270,7 +289,7 @@ export default function LandingPage() {
       <footer className="border-t border-zinc-200 dark:border-zinc-800 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-sm text-zinc-500 dark:text-zinc-500">
-            {t("landing.footer.copyright")}
+            {t("footer.copyright")}
           </p>
         </div>
       </footer>

@@ -2,8 +2,9 @@ import { useTranslation } from "react-i18next";
 import type { LoaderFunctionArgs, MetaFunction } from "react-router";
 import ErrorPage from "@/components/error/ErrorPage";
 
-function parseLang(cookieHeader: string): "zh" | "en" {
-  return /(?:^|;\s*)i18next=en/.test(cookieHeader) ? "en" : "zh";
+function parseLang(cookieHeader: string): "zh-CN" | "en" {
+  const m = cookieHeader.match(/(?:^|;\s*)i18next=([^;]*)/);
+  return m?.[1] === "en" ? "en" : "zh-CN";
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {

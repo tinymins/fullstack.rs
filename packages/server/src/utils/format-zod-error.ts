@@ -18,7 +18,7 @@ function formatIssue(issue: ZodIssueLike, language: Language): string {
       ? translated
       : fieldKey;
 
-  if (language === "en") {
+  if (language !== "zh-CN" && language !== "zh-TW") {
     return issue.message;
   }
 
@@ -53,6 +53,6 @@ export function formatZodError(
   issues: ZodIssueLike[],
   language: Language,
 ): string {
-  const sep = language === "zh" ? "；" : "; ";
+  const sep = language === "zh-CN" || language === "zh-TW" ? "；" : "; ";
   return issues.map((issue) => formatIssue(issue, language)).join(sep);
 }

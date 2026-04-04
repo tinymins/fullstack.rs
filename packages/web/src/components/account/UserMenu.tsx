@@ -48,7 +48,7 @@ export default function UserMenu({
       ? [
           {
             key: "dashboard",
-            label: t("landing.nav.dashboard"),
+            label: t("nav.dashboard"),
             onClick: () => {
               setOpen(false);
               navigate("/dashboard");
@@ -58,7 +58,7 @@ export default function UserMenu({
       : []),
     {
       key: "profile",
-      label: t("user.profileSettings"),
+      label: t("userMenu.profileSettings"),
       onClick: () => {
         setOpen(false);
         setSettingsOpen(true);
@@ -78,7 +78,7 @@ export default function UserMenu({
       : []),
     {
       key: "logout",
-      label: t("user.signOut"),
+      label: t("userMenu.signOut"),
       danger: true,
       onClick: () => {
         setOpen(false);

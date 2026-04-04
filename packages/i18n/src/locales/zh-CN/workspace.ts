@@ -1,0 +1,25 @@
+const workspace = {
+  workspaces: "空间站",
+  select: "选择空间站",
+  new: "新建空间站",
+  createSuccess: "空间站创建成功",
+  createFailed: "创建失败",
+  name: "名称",
+  namePlaceholder: "我的空间站",
+  description: "描述（可选）",
+  create: "创建",
+  slugLabel: "Slug",
+  slugPlaceholder: "my-workspace",
+  placeholder: "概览",
+  currentWorkspace: "工作空间",
+  userLabel: "用户",
+  welcomeBack: "欢迎回来，{{name}}",
+  defaultNameSuffix: "的空间站",
+  defaultDesc: "默认工作空间",
+  loadError: "无法加载工作空间",
+  retryLater: "请稍后重试",
+  empty: "暂无工作空间",
+  createFirst: "请先创建工作空间",
+};
+
+export default workspace;

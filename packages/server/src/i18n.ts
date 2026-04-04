@@ -1,20 +1,34 @@
-import { en, type TranslationSchema, zh } from "@acme/i18n";
+import {
+  deDE,
+  enUS,
+  jaJP,
+  type TranslationSchema,
+  zhCN,
+  zhTW,
+} from "@acme/i18n";
 
-export type Language = "zh" | "en";
+export type Language = "zh-CN" | "en-US" | "de-DE" | "ja-JP" | "zh-TW";
 
 const resources = {
-  zh,
-  en,
+  "zh-CN": zhCN,
+  "en-US": enUS,
+  "de-DE": deDE,
+  "ja-JP": jaJP,
+  "zh-TW": zhTW,
 } as const;
 
 type TranslationRoot = TranslationSchema["translation"];
 
 export const normalizeLanguage = (value?: string): Language => {
-  if (!value) return "zh";
+  if (!value) return "zh-CN";
   const lower = value.toLowerCase();
-  if (lower.startsWith("en")) return "en";
-  if (lower.startsWith("zh")) return "zh";
-  return "zh";
+  if (lower.startsWith("en")) return "en-US";
+  if (lower.startsWith("de")) return "de-DE";
+  if (lower.startsWith("ja")) return "ja-JP";
+  if (lower === "zh-tw" || lower === "zh_tw" || lower === "zh-hant")
+    return "zh-TW";
+  if (lower.startsWith("zh")) return "zh-CN";
+  return "zh-CN";
 };
 
 const getByPath = (root: TranslationRoot, path: string): unknown => {
@@ -26,7 +40,8 @@ const getByPath = (root: TranslationRoot, path: string): unknown => {
 };
 
 export const t = (language: Language, key: string): string => {
-  const root = resources[language]?.translation ?? resources.zh.translation;
+  const root =
+    resources[language]?.translation ?? resources["zh-CN"].translation;
   const value = getByPath(root, key);
   return typeof value === "string" ? value : key;
 };

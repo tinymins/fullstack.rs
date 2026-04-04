@@ -25,10 +25,10 @@ export function useAvatarUpload(
     onSuccess: (updated) => {
       setAvatarKey("");
       onUpdateUser(updated);
-      message.success(t("user.avatarRemoved"));
+      message.success(t("userMenu.avatarRemoved"));
     },
     onError: (err) => {
-      message.error(err.message || t("user.avatarRemoveFailed"));
+      message.error(err.message || t("userMenu.avatarRemoveFailed"));
     },
   });
 
@@ -47,15 +47,15 @@ export function useAvatarUpload(
       });
       if (!res.ok) {
         const data = (await res.json().catch(() => ({}))) as { error?: string };
-        throw new Error(data.error ?? t("user.uploadFailed"));
+        throw new Error(data.error ?? t("userMenu.uploadFailed"));
       }
       const data = (await res.json()) as { key: string; user: User };
       setAvatarKey(data.key);
       onUpdateUser(data.user);
-      message.success(t("user.avatarUpdated"));
+      message.success(t("userMenu.avatarUpdated"));
     } catch (err) {
       message.error(
-        err instanceof Error ? err.message : t("user.uploadFailed"),
+        err instanceof Error ? err.message : t("userMenu.uploadFailed"),
       );
     } finally {
       setUploading(false);

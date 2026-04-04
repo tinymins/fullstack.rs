@@ -60,7 +60,7 @@ function Providers({ children }: { children: ReactNode }) {
               const workspaceSlug = getWorkspaceFromPath();
               return {
                 ...(workspaceSlug ? { "x-workspace-id": workspaceSlug } : {}),
-                "x-lang": i18n.resolvedLanguage ?? i18n.language ?? "zh",
+                "x-lang": i18n.resolvedLanguage ?? i18n.language ?? "zh-CN",
               };
             },
           }),
@@ -90,7 +90,7 @@ function Providers({ children }: { children: ReactNode }) {
 
 export default function Root() {
   return (
-    <html lang="zh">
+    <html lang="zh-CN">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />

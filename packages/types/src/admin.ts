@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { UserRoleSchema } from "./user";
 
 export const SystemSettingsSchema = z.object({
   allowRegistration: z.boolean(),
@@ -25,7 +26,7 @@ export const AdminUserSchema = z.object({
   id: z.string(),
   name: z.string(),
   email: z.string(),
-  role: z.string(),
+  role: UserRoleSchema,
   lastLoginAt: z.string().nullable(),
   createdAt: z.string(),
 });
@@ -36,12 +37,12 @@ export const CreateUserInputSchema = z.object({
   name: z.string().min(1),
   email: z.string().email(),
   password: z.string().min(4),
-  role: z.enum(["admin", "user"]).optional(),
+  role: UserRoleSchema.optional(),
 });
 
 export const UpdateUserRoleInputSchema = z.object({
   userId: z.string(),
-  role: z.enum(["admin", "user"]),
+  role: UserRoleSchema,
 });
 
 export const ForceResetPasswordInputSchema = z.object({
