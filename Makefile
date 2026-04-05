@@ -110,7 +110,7 @@ init: ## 首次初始化项目（清理+安装+迁移）
 	@printf "\n"
 	@printf "$(YELLOW)🦀 [6/9] 构建 WASM 模块...$(NC)\n"
 	@if [ -d packages/wasm ]; then \
-		cd packages/wasm && wasm-pack build --target web; \
+		cd packages/wasm && wasm-pack build --release --target bundler --out-dir pkg; \
 		printf "$(GREEN)✓ WASM 构建完成$(NC)\n"; \
 	else \
 		printf "$(YELLOW)⚠ packages/wasm 不存在，跳过$(NC)\n"; \
@@ -144,6 +144,8 @@ dev\:kill: ## 杀掉残留的 dev 进程（释放端口，给 make dev 让路）
 
 build: ## 编译生产版本
 	@printf "$(GREEN)🔨 开始编译...$(NC)\n"
+	@printf "$(BLUE)→ 构建 WASM 模块...$(NC)\n"
+	@cd packages/wasm && pnpm build
 	@pnpm build
 	@printf "$(BLUE)→ 构建 Rust 二进制 (release)...$(NC)\n"
 	@cd packages/server && cargo build --release
@@ -151,6 +153,8 @@ build: ## 编译生产版本
 
 docker: ## 构建 Docker 镜像（Rust + 前端）
 	@printf "$(GREEN)🐳 构建 Docker 镜像...$(NC)\n"
+	@printf "$(BLUE)→ 构建 WASM 模块...$(NC)\n"
+	@cd packages/wasm && pnpm build
 	@printf "$(BLUE)→ 构建 Rust 二进制 (release)...$(NC)\n"
 	@cd packages/server && cargo build --release
 	@printf "$(BLUE)→ 构建 $(SERVER_IMAGE) 镜像（含前端）...$(NC)\n"

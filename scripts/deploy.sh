@@ -150,7 +150,7 @@ build_images() {
 # 导出镜像
 export_images() {
     log_info "导出镜像到 ${LOCAL_TMP}/${IMAGE_FILE}..."
-    docker save rs-fullstack-server:latest apps-web:latest \
+    docker save rs-fullstack-server:latest \
         -o "${LOCAL_TMP}/${IMAGE_FILE}"
 
     local size=$(du -h "${LOCAL_TMP}/${IMAGE_FILE}" | cut -f1)
@@ -171,9 +171,9 @@ upload_configs() {
     # 检查远程目录是否存在
     ssh "$SERVER" "mkdir -p ${REMOTE_DIR}"
 
-    # 检查 docker/docker-compose.yml 是否存在，不存在则上传
-    if ! ssh "$SERVER" "test -f ${REMOTE_DIR}/docker/docker-compose.yml"; then
-        log_info "上传 docker/docker-compose.yml..."
+    # 检查 docker-compose.yml 是否存在，不存在则上传
+    if ! ssh "$SERVER" "test -f ${REMOTE_DIR}/docker-compose.yml"; then
+        log_info "上传 docker-compose.yml..."
         scp docker/docker-compose.yml "${SERVER}:${REMOTE_DIR}/"
     else
         log_info "docker/docker-compose.yml 已存在，跳过上传"
@@ -184,11 +184,11 @@ upload_configs() {
         scp docker/docker-compose.debug.yml "${SERVER}:${REMOTE_DIR}/"
     fi
 
-    # 检查 .env 是否存在，不存在则上传 .env.example
+    # 检查 .env 是否存在，不存在则上传 docker/.env.example
     if ! ssh "$SERVER" "test -f ${REMOTE_DIR}/.env"; then
-        if [ -f ".env.example" ]; then
-            log_info "上传 .env.example 为 .env..."
-            scp .env.example "${SERVER}:${REMOTE_DIR}/.env"
+        if [ -f "docker/.env.example" ]; then
+            log_info "上传 docker/.env.example 为 .env..."
+            scp docker/.env.example "${SERVER}:${REMOTE_DIR}/.env"
         else
             log_warn ".env.example 不存在，请手动创建 .env 文件"
         fi
@@ -231,7 +231,7 @@ EOF
 run_migration() {
     log_info "执行数据库迁移（Prisma）..."
 
-    ssh "$SERVER" "cd ${REMOTE_DIR} && docker compose run --rm db-migrate"
+    ssh "$SERVER" "cd ${REMOTE_DIR} && docker compose exec server npx prisma db push"
     local exit_code=$?
 
     if [ $exit_code -ne 0 ]; then
@@ -244,7 +244,7 @@ run_migration() {
 
 # 检查服务器 .env 是否缺少新变量
 check_server_env_updates() {
-    local app_env_example="${PROJECT_ROOT}/.env.example"
+    local app_env_example="${PROJECT_ROOT}/docker/.env.example"
 
     if [ ! -f "$app_env_example" ]; then
         return
