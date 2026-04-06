@@ -146,7 +146,7 @@ export default function LandingPage() {
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/75 dark:bg-zinc-900/75 border-b border-zinc-200/60 dark:border-zinc-800/60"
+        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/75 dark:bg-zinc-900/75 border-b border-zinc-200/60 dark:border-zinc-800/60 pt-[env(safe-area-inset-top,0px)]"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -294,7 +294,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-200 dark:border-zinc-800 py-12">
+      <footer className="border-t border-zinc-200 dark:border-zinc-800 py-12 pb-[max(3rem,env(safe-area-inset-bottom,0px))]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-sm text-zinc-500 dark:text-zinc-500">
             {t("footer.copyright")}
