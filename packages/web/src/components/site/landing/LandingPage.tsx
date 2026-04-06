@@ -123,8 +123,14 @@ export default function LandingPage() {
 
   const langMenuItems = langKeys.map((key) => ({
     key,
-    label: LANG_NATIVE_NAMES[key],
-    icon: key === lang ? <Check className="w-4 h-4" /> : undefined,
+    label: (
+      <span className="flex items-center justify-between w-full">
+        <span>{LANG_NATIVE_NAMES[key]}</span>
+        {key === lang && (
+          <Check className="w-3.5 h-3.5 ml-4 text-blue-500 dark:text-blue-400" />
+        )}
+      </span>
+    ),
     onClick: () => {
       setLangMode(key);
       if (isAuthed) {
