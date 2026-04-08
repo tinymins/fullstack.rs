@@ -33,19 +33,19 @@ const common = {
   unauthorizedDesc:
     "申し訳ございません。このページへのアクセス権限がありません",
   meta: {
-    dashboardTitle: "ダッシュボード — AI Stack",
-    loginTitle: "ログイン — AI Stack",
+    dashboardTitle: "ダッシュボード — fullstack.rs",
+    loginTitle: "ログイン — fullstack.rs",
     loginDescription:
-      "AI Stack にログインして、AI フルスタックテンプレートで開発を始めましょう。",
-    registerTitle: "登録 — AI Stack",
+      "fullstack.rs にログインして、Rust フルスタックボイラープレートで開発を始めましょう。",
+    registerTitle: "登録 — fullstack.rs",
     registerDescription:
-      "AI Stack アカウントを作成して、AI Coding で本格的なアプリを構築しましょう。",
-    unauthorizedTitle: "アクセス制限 — AI Stack",
-    notFoundTitle: "ページが見つかりません — AI Stack",
-    homeTitle: "AI Stack — AI フルスタックアプリケーションテンプレート",
+      "fullstack.rs アカウントを作成して、本格的なフルスタックアプリを構築しましょう。",
+    unauthorizedTitle: "アクセス制限 — fullstack.rs",
+    notFoundTitle: "ページが見つかりません — fullstack.rs",
+    homeTitle: "fullstack.rs — Rust + React フルスタックボイラープレート",
     homeDescription:
-      "Rust (Axum) + React 19 + PostgreSQL のフルスタックボイラープレート。認証 · ワークスペース · i18n · Docker。",
-    homeOgTitle: "AI Stack — AI フルスタックテンプレート",
+      "Rust (Axum) + React 19 + PostgreSQL の本番対応モノレポ。認証 · ワークスペース · WASM · ミニプログラム · i18n · Docker。",
+    homeOgTitle: "fullstack.rs — Rust + React フルスタックボイラープレート",
   },
   lang: {
     zhCN: "简体中文",

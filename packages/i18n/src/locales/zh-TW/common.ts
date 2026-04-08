@@ -31,18 +31,17 @@ const common = {
   unauthorizedTitle: "存取受限",
   unauthorizedDesc: "抱歉，您沒有權限存取此頁面",
   meta: {
-    dashboardTitle: "控制台 — AI Stack",
-    loginTitle: "登入 — AI Stack",
-    loginDescription: "登入 AI Stack，開始使用 AI 全棧規範模板。",
-    registerTitle: "註冊 — AI Stack",
-    registerDescription:
-      "創建 AI Stack 帳號，開始用 AI Coding 構建生產級應用。",
-    unauthorizedTitle: "無權存取 — AI Stack",
-    notFoundTitle: "頁面不存在 — AI Stack",
-    homeTitle: "AI Stack — AI 全棧應用模板",
+    dashboardTitle: "控制台 — fullstack.rs",
+    loginTitle: "登入 — fullstack.rs",
+    loginDescription: "登入 fullstack.rs，開始使用 Rust 全端開發模板。",
+    registerTitle: "註冊 — fullstack.rs",
+    registerDescription: "創建 fullstack.rs 帳號，開始構建生產級全端應用。",
+    unauthorizedTitle: "無權存取 — fullstack.rs",
+    notFoundTitle: "頁面不存在 — fullstack.rs",
+    homeTitle: "fullstack.rs — Rust + React 全端開發模板",
     homeDescription:
-      "基於 Rust (Axum) + React 19 + PostgreSQL 的全端開發模板。認證 · 工作空間 · 國際化 · Docker 部署。",
-    homeOgTitle: "AI Stack — AI 全棧應用模板",
+      "基於 Rust (Axum) + React 19 + PostgreSQL 的生產級 Monorepo 腳手架。認證 · 工作空間 · WASM · 小程式 · 國際化 · Docker 部署。",
+    homeOgTitle: "fullstack.rs — Rust + React 全端開發模板",
   },
   lang: {
     zhCN: "简体中文",

@@ -24,12 +24,12 @@ export const meta: MetaFunction<typeof clientLoader> = ({ data }) => {
     {
       name: "keywords",
       content:
-        "AI coding, full-stack template, tRPC, React, Hono, Prisma, TypeScript, boilerplate",
+        "fullstack, Rust, Axum, React, Sea-ORM, PostgreSQL, TypeScript, boilerplate, monorepo, WASM",
     },
     // Open Graph
     { property: "og:type", content: "website" },
     { property: "og:url", content: SITE_URL },
-    { property: "og:site_name", content: "AI Stack" },
+    { property: "og:site_name", content: "fullstack.rs" },
     { property: "og:title", content: ogTitle },
     { property: "og:description", content: description },
     { property: "og:locale", content: ogLocale },

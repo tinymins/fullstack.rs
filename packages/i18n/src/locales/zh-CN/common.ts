@@ -31,18 +31,17 @@ const common = {
   unauthorizedTitle: "访问受限",
   unauthorizedDesc: "抱歉，您没有权限访问此页面",
   meta: {
-    dashboardTitle: "控制台 — AI Stack",
-    loginTitle: "登录 — AI Stack",
-    loginDescription: "登录到 AI Stack，开始使用 AI 全栈规范模板。",
-    registerTitle: "注册 — AI Stack",
-    registerDescription:
-      "创建 AI Stack 账号，开始用 AI Coding 构建生产级应用。",
-    unauthorizedTitle: "无权访问 — AI Stack",
-    notFoundTitle: "页面不存在 — AI Stack",
-    homeTitle: "AI Stack — AI 全栈应用模板",
+    dashboardTitle: "控制台 — fullstack.rs",
+    loginTitle: "登录 — fullstack.rs",
+    loginDescription: "登录 fullstack.rs，开始使用 Rust 全栈开发模板。",
+    registerTitle: "注册 — fullstack.rs",
+    registerDescription: "创建 fullstack.rs 账号，开始构建生产级全栈应用。",
+    unauthorizedTitle: "无权访问 — fullstack.rs",
+    notFoundTitle: "页面不存在 — fullstack.rs",
+    homeTitle: "fullstack.rs — Rust + React 全栈开发模板",
     homeDescription:
-      "基于 Rust (Axum) + React 19 + PostgreSQL 的全栈开发模板。认证 · 工作空间 · 国际化 · Docker 部署。",
-    homeOgTitle: "AI Stack — AI 全栈应用模板",
+      "基于 Rust (Axum) + React 19 + PostgreSQL 的生产级 Monorepo 脚手架。认证 · 工作空间 · WASM · 小程序 · 国际化 · Docker 部署。",
+    homeOgTitle: "fullstack.rs — Rust + React 全栈开发模板",
   },
   lang: {
     zhCN: "简体中文",

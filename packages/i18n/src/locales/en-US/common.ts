@@ -32,19 +32,19 @@ const common = {
   unauthorizedTitle: "Access denied",
   unauthorizedDesc: "Sorry, you do not have permission to access this page",
   meta: {
-    dashboardTitle: "Dashboard — AI Stack",
-    loginTitle: "Sign In — AI Stack",
+    dashboardTitle: "Dashboard — fullstack.rs",
+    loginTitle: "Sign In — fullstack.rs",
     loginDescription:
-      "Sign in to AI Stack and start building with the AI full-stack template.",
-    registerTitle: "Register — AI Stack",
+      "Sign in to fullstack.rs and start building with the Rust full-stack boilerplate.",
+    registerTitle: "Register — fullstack.rs",
     registerDescription:
-      "Create an AI Stack account and start building production-grade apps with AI Coding.",
-    unauthorizedTitle: "Unauthorized — AI Stack",
-    notFoundTitle: "Page Not Found — AI Stack",
-    homeTitle: "AI Stack — AI Full-Stack Application Template",
+      "Create a fullstack.rs account and start building production-grade full-stack apps.",
+    unauthorizedTitle: "Unauthorized — fullstack.rs",
+    notFoundTitle: "Page Not Found — fullstack.rs",
+    homeTitle: "fullstack.rs — Rust + React Full-Stack Boilerplate",
     homeDescription:
-      "A full-stack boilerplate built with Rust (Axum) + React 19 + PostgreSQL. Auth · Workspaces · i18n · Docker.",
-    homeOgTitle: "AI Stack — AI Full-Stack Template",
+      "Production-ready monorepo with Rust (Axum) + React 19 + PostgreSQL. Auth · Workspaces · WASM · Mini Program · i18n · Docker.",
+    homeOgTitle: "fullstack.rs — Rust + React Full-Stack Boilerplate",
   },
   lang: {
     zhCN: "简体中文",

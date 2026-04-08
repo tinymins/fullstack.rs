@@ -31,19 +31,19 @@ const common = {
   unauthorizedTitle: "Zugriff verweigert",
   unauthorizedDesc: "Sie haben keine Berechtigung, auf diese Seite zuzugreifen",
   meta: {
-    dashboardTitle: "Dashboard — AI Stack",
-    loginTitle: "Anmelden — AI Stack",
+    dashboardTitle: "Dashboard — fullstack.rs",
+    loginTitle: "Anmelden — fullstack.rs",
     loginDescription:
-      "Melden Sie sich bei AI Stack an und beginnen Sie mit der AI-Full-Stack-Vorlage.",
-    registerTitle: "Registrieren — AI Stack",
+      "Melden Sie sich bei fullstack.rs an und beginnen Sie mit dem Rust-Full-Stack-Boilerplate.",
+    registerTitle: "Registrieren — fullstack.rs",
     registerDescription:
-      "Erstellen Sie ein AI Stack-Konto und entwickeln Sie produktionsreife Apps mit AI Coding.",
-    unauthorizedTitle: "Zugriff verweigert — AI Stack",
-    notFoundTitle: "Seite nicht gefunden — AI Stack",
-    homeTitle: "AI Stack — AI Full-Stack-Anwendungsvorlage",
+      "Erstellen Sie ein fullstack.rs-Konto und entwickeln Sie produktionsreife Full-Stack-Apps.",
+    unauthorizedTitle: "Zugriff verweigert — fullstack.rs",
+    notFoundTitle: "Seite nicht gefunden — fullstack.rs",
+    homeTitle: "fullstack.rs — Rust + React Full-Stack-Boilerplate",
     homeDescription:
-      "Ein Full-Stack-Boilerplate mit Rust (Axum) + React 19 + PostgreSQL. Auth · Workspaces · i18n · Docker.",
-    homeOgTitle: "AI Stack — AI Full-Stack-Vorlage",
+      "Produktionsreifes Monorepo mit Rust (Axum) + React 19 + PostgreSQL. Auth · Workspaces · WASM · Mini Program · i18n · Docker.",
+    homeOgTitle: "fullstack.rs — Rust + React Full-Stack-Boilerplate",
   },
   lang: {
     zhCN: "简体中文",

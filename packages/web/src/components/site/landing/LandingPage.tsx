@@ -57,6 +57,11 @@ function GlobeIcon() {
 
 const FEATURES = [
   {
+    icon: "🦀",
+    titleKey: "features.backend.title",
+    descKey: "features.backend.desc",
+  },
+  {
     icon: "🔗",
     titleKey: "features.trpc.title",
     descKey: "features.trpc.desc",
@@ -72,9 +77,14 @@ const FEATURES = [
     descKey: "features.db.desc",
   },
   {
-    icon: "🏗️",
-    titleKey: "features.backend.title",
-    descKey: "features.backend.desc",
+    icon: "🛡️",
+    titleKey: "features.devtools.title",
+    descKey: "features.devtools.desc",
+  },
+  {
+    icon: "🚀",
+    titleKey: "features.deploy.title",
+    descKey: "features.deploy.desc",
   },
   {
     icon: "🎨",
@@ -82,9 +92,9 @@ const FEATURES = [
     descKey: "features.tailwind.desc",
   },
   {
-    icon: "📦",
-    titleKey: "features.workspace.title",
-    descKey: "features.workspace.desc",
+    icon: "📱",
+    titleKey: "features.multiplatform.title",
+    descKey: "features.multiplatform.desc",
   },
 ] as const;
 
@@ -176,11 +186,11 @@ export default function LandingPage() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.97 }}
             >
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 text-white text-sm font-black shadow-sm">
-                A
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-red-600 text-white text-sm font-black shadow-sm">
+                rs
               </span>
-              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
-                AI Stack
+              <span className="bg-gradient-to-r from-orange-600 to-red-600 dark:from-orange-400 dark:to-red-400 bg-clip-text text-transparent">
+                fullstack.rs
               </span>
             </motion.button>
 
@@ -289,7 +299,7 @@ export default function LandingPage() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {FEATURES.map((feature, i) => (
               <motion.div
                 key={feature.titleKey}
