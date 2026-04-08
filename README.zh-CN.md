@@ -13,7 +13,7 @@
 | **WASM** | wasm-bindgen · wasm-pack |
 | **类型** | Zod v4 · TypeScript 5.9 · ts-rs |
 | **构建** | Turborepo · Vite 7 |
-| **工具** | Biome · Docker Compose · pnpm 10 |
+| **工具** | Cargo clippy · rustfmt · Biome · Docker Compose · pnpm 10 |
 | **小程序** | Taro 4 · React 18 · 微信 |
 
 ## 快速开始
@@ -33,12 +33,12 @@ make dev
 ## 核心命令
 
 ```bash
-make init      # 首次初始化（破坏性操作，会重建数据库）
+make init      # 首次初始化（创建 .env、安装依赖、启动数据库、同步 schema）
 make dev       # 启动开发环境（数据库 + 开发服务器）
 make build     # 生产构建
 make docker    # Docker 镜像构建
 make deploy    # 一键部署到服务器
-make lint      # Biome lint + 类型检查
+make lint      # Biome + Cargo clippy + 类型检查
 make gen:api   # 从 Rust DTO 生成 TypeScript 类型
 ```
 
@@ -57,13 +57,16 @@ packages/
 
 ## 特色功能
 
-- **端到端类型安全**：Rust DTO → ts-rs → TypeScript，全链路类型安全
+- **端到端类型安全**：Rust DTO → ts-rs → TypeScript，搭配 Zod v4 验证，全链路类型安全
 - **SPA + 客户端路由**：React Router v7 代码分割 + 客户端加载器
 - **多工作空间**：支持工作空间切换，基于角色的访问控制
 - **管理后台**：超级管理员 / 管理员 / 用户三级角色
 - **对象存储**：OpenDAL 抽象（本地文件系统，可扩展至 S3）
 - **国际化**：5 种语言（zh-CN / en-US / de-DE / ja-JP / zh-TW）
 - **主题系统**：明暗模式 + CSS 变量 + 跟随系统偏好
+- **严格开发工具链**：Cargo workspace + clippy pedantic 静态分析、rustfmt、Biome、Turborepo
+- **一键部署**：多阶段 Docker 构建 + 嵌入式 SPA，SSH 一键部署到服务器
+- **多平台**：React SPA + 微信小程序（Taro 4）+ WASM 模块，一个 Monorepo 三大平台
 
 ## 部署
 

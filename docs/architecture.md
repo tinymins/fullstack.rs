@@ -1,6 +1,6 @@
 # System Architecture Overview
 
-ACME Stack 是一个全栈 Web 应用脚手架，采用 pnpm monorepo 管理，Rust 后端 + React 前端，端到端类型安全。
+ACME Stack（fullstack.rs）是一个全栈 Web 应用脚手架，采用 pnpm monorepo 管理，Rust 后端 + React 前端，端到端类型安全。
 
 ## 架构图
 
@@ -32,7 +32,7 @@ ACME Stack 是一个全栈 Web 应用脚手架，采用 pnpm monorepo 管理，R
 项目使用 **pnpm workspaces + Turborepo** 管理多包依赖和构建顺序。
 
 ```
-react-nestjs-ai-boilerplate/
+fullstack.rs/
 ├── packages/
 │   ├── server/          # Rust 后端（Axum + Sea-ORM）
 │   ├── wasm/            # WebAssembly 模块
@@ -202,3 +202,33 @@ make dev
 文件修改 → watchexec/cargo-watch 检测 → 自动重编译 → 重启服务器。
 
 前端修改 → Vite HMR → 浏览器热更新。
+
+## Cargo Workspace
+
+项目使用 **Cargo workspace** 统一管理 Rust crate（`packages/server`），`packages/wasm` 因为需要独立的体积优化 profile（`opt-level = "s"`）而排除在外。
+
+### 工具链配置
+
+| 文件 | 用途 |
+|------|------|
+| `Cargo.toml`（根） | Workspace 成员 + 共享 lints + build profiles |
+| `clippy.toml` | Clippy 阈值配置（认知复杂度、参数数量等） |
+| `rustfmt.toml` | 代码格式化配置（edition 2024） |
+| `rust-toolchain.toml` | Rust 工具链版本锁定 |
+
+### Workspace Lints
+
+根 `Cargo.toml` 中定义了统一的 lint 规则，子 crate 通过 `[lints] workspace = true` 继承：
+
+- **clippy::all** + **clippy::pedantic** — warn 级别
+- 精选关闭的 pedantic lint（如 `module_name_repetitions`、`must_use_candidate` 等，减少误报噪音）
+- **unsafe_code** — warn（标记但不阻止编译）
+- **unused_must_use** — deny（必须处理 Result 等返回值）
+
+### Build Profiles
+
+| Profile | 用途 | 关键配置 |
+|---------|------|---------|
+| `dev` | 开发调试 | `debug = "line-tables-only"`（加速编译，保留行号） |
+| `test` | 测试运行 | `debug = false`（加速测试编译） |
+| `release` | 生产构建 | `opt-level = 3, lto = true, codegen-units = 1, panic = "abort", strip = "symbols"` |
