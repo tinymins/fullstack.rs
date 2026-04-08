@@ -12,7 +12,8 @@ path = "src/main.rs"
 name = "rs_fullstack_server"
 path = "src/lib.rs"
 
-[workspace]
+[lints]
+workspace = true
 
 [target.'cfg(not(target_env = "msvc"))'.dependencies]
 tikv-jemallocator = "0.6"
@@ -41,7 +42,4 @@ async-trait = "0.1"
 bytes = "1"
 mime_guess = "2"
 
-[profile.release]
-opt-level = 2
-lto = "thin"
-strip = "symbols"
+## profile.release 继承自根 Cargo.toml workspace
